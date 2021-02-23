@@ -1,0 +1,34 @@
+integer[] massive = new integer[] {1,2,3,4,5,6,7,8,9,10};
+integer[] nechet =  new integer[massive.size()];
+integer[] chet =  new integer[massive.size()];
+integer chetCount = 0, nechetCount = 0;
+
+for (integer i = 0; i < massive.size(); i++){
+    integer massiveElement = massive[i];
+    
+    if (math.mod(massiveElement,2) == 0){
+        chet[chetCount] = massiveElement;
+        chetCount++;
+    }else{
+        nechet[nechetCount] = massiveElement;
+        nechetCount++;
+    }
+}
+
+System.debug('Нечетные:');
+
+for (integer i = 0; i < nechetCount; i++){
+    
+    if (nechet[i] != null){
+        System.debug(nechet[i]);
+    }
+}
+
+System.debug('Четные:');
+
+for (integer i = 0; i < chetCount; i++){
+    
+    if (chet[i] != null){
+        System.debug(chet[i]);
+    }
+}

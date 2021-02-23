@@ -1,0 +1,11 @@
+Integer n1 = 1;
+Integer n2 = 2;
+Integer n3 = 3;
+Integer n4 = 2;
+System.debug(n1 == 1); 				true
+System.debug(n2 == 3);				false
+System.debug(n1 >= 1 && n2 < 4);		true
+System.debug(n4 <= 99 && n3 < n4);		false
+System.debug(n2 >= n1 || n3 == n4);		true
+System.debug(n3 + n4 < n2 || 3 - n2 >= n3);	false
+System.debug(!(n3 > n4));			false

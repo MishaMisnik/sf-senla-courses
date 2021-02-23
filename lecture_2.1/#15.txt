@@ -1,0 +1,16 @@
+List <integer> fibonacciNumbers = new List<integer> {1, 2};
+integer endNumber = 100, k = 2;
+    
+while(fibonacciNumbers[fibonacciNumbers.size() - 1] < endNumber){
+    integer fbNumber = fibonacciNumbers[k - 2] + fibonacciNumbers[k - 1];
+    
+    if(fbNumber < endNumber){
+        fibonacciNumbers.add(fbNumber);
+        k++;
+    }else{
+        break;
+    }
+}
+
+System.debug(fibonacciNumbers);
+    

@@ -1,0 +1,8 @@
+List<String> words = new List<String>{'first','second', 'third', 'fourth', 'fifth'};
+
+for(integer i = 0; i <  words.size(); i++){
+    
+    if(math.mod(i, 2) != 0){
+        System.debug(words[i]);  
+    }
+}

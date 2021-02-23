@@ -1,0 +1,18 @@
+List<string> words = new List<string> {'Belarus', 'Poland', 'German', 'Canada', 'Japan', 'Russia', 'China'};
+Map<integer, integer> result = new Map<integer, integer>{};
+
+for(integer i = 0; i < words.size(); i++){
+    integer wordLength = words[i].length();
+    
+    
+    if (result.containsKey(wordLength)){
+        integer wordCount = 0;
+        
+        wordCount = result.get(wordLength) + 1;
+        result.put(wordLength, wordCount);
+    }else{
+        result.put(wordLength, 1);
+    } 
+}
+
+System.debug(result);

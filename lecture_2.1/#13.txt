@@ -1,0 +1,20 @@
+List<string> words = new List<string> {'Belarus', 'Poland', 'German', 'Canada', 'Japan', 'Russia', 'China'};
+List<string> bufferList = new List<string>{};
+Map<integer, List<string>> result = new Map<integer, list<string>>{};
+
+for(integer i = 0; i < words.size(); i++){
+    integer wordLength = words[i].length();
+    
+    if (result.containsKey(wordLength)){
+        bufferList = result.get(wordLength);
+        bufferList.add(words[i]);
+        result.put(wordLength, bufferList);
+    }else{
+        bufferList = new list<string>{};
+            
+        bufferList.add(words[i]);
+        result.put(wordLength, bufferList);
+    }
+}
+
+System.debug(result);

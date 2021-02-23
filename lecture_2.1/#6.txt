@@ -1,0 +1,6 @@
+Boolean b1 = false;
+System.debug(b1);		false
+Boolean b2 = true;
+System.debug(b2);		true
+System.debug(b1 == b2);		false
+System.debug(b1 != b2);		true

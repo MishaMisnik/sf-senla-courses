@@ -1,0 +1,13 @@
+Long numToCheck = 910019;
+string elementToCheck = string.valueOf(numToCheck);
+boolean check = true;
+integer numLength = elementToCheck.length();
+
+for(integer i = 0; i < numLength; i++){
+    
+    if(elementToCheck.charAt(i) != elementToCheck.charAt(numLength - 1 -i)){
+        check = false;
+    }
+}
+
+System.debug(check);

@@ -1,0 +1,8 @@
+integer n = 7;
+integer result = 0;
+
+for (integer i = 0; i < n; i++){
+    result += i;
+}
+
+System.debug(result);

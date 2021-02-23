@@ -1,0 +1,19 @@
+List <integer> primeNumbers = new List<integer> {};
+integer endNumber = 100;
+    
+for(integer i = 2; i < endNumber; i++){
+    integer check = 0;
+    
+    for(integer j = 1; j < i && check < 2; j++){
+        
+        if(math.mod(i, j) == 0){
+			check++;
+        }
+    }
+    
+    if(check < 2){
+        primeNumbers.add(i);
+    }
+}
+
+System.debug(primeNumbers);

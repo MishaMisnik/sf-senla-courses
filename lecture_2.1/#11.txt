@@ -1,0 +1,20 @@
+integer[] massiveChisel = new integer[]{1,2,3,3,3,6,8,8,3,10};
+integer[] result = new integer[massiveChisel.size()];
+integer k = 0;
+
+for (integer i = 0; i < massiveChisel.size(); i++){
+    
+    if(math.mod(massiveChisel[i],2) == 0){
+        result[k] = i;
+        k++;
+    }
+}
+    
+System.debug('Массив с индексами:');
+
+for (integer i = 0; i < k; i++){
+    
+    if (result[i] != null){
+        system.debug(result[i]);
+    }
+}
