@@ -16,6 +16,7 @@ public class NumberUtility {
                 primeNumbers.add(i);
             }
         }
+	    
         return primeNumbers;
     }
     
@@ -43,7 +44,6 @@ public class NumberUtility {
         integer numLength = elementToCheck.length();
         
         for(integer i = 0; i < numLength; i++){
-            
             if(elementToCheck.charAt(i) != elementToCheck.charAt(numLength - 1 -i)){
                 check = false;
             }
