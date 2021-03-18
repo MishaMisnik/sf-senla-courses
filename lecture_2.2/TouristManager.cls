@@ -13,7 +13,7 @@ public class TouristManager {
     }
     
     public static List<Tourist__c> getByAge(Set<Integer> ages) {
-        for (integer age : Ages ) {
+        for (Integer age : Ages ) {
             if (age == null) {
                 return new List<Tourist__c>();
             }

@@ -5,7 +5,7 @@ public class TouristService {
         List<Tourist__c> similarTourists = [
             SELECT LastName__c, Email__c, IsDuplicate__c
             FROM Tourist__c
-            WHERE LastName__c = :newTourists[0].LastName__c AND Email__c = :newTourists[0].Email__c AND IsDuplicate__c = false
+            WHERE LastName__c = :tourist.LastName__c AND Email__c = :tourist.Email__c AND IsDuplicate__c = false
         ];
         
         if (similarTourists != null && !similarTourists.isEmpty()) {
