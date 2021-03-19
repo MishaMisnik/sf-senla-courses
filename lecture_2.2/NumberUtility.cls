@@ -1,6 +1,6 @@
 public class NumberUtility {
 	
-    public static List<integer> GetPrimeNumbers(Integer endNumber) {
+    public static List<integer> getPrimeNumbers(Integer endNumber) {
         if (endNumber == 0) {
             return new List<integer>(); 
         }
@@ -23,7 +23,7 @@ public class NumberUtility {
         return primeNumbers;
     }
     
-    public static List<integer> GetFibonacciNumbers(Integer endNumber) {
+    public static List<integer> getFibonacciNumbers(Integer endNumber) {
         List<integer> fibonacciNumbers =  new List<integer>{1, 2};
 		if (endNumber <= 2) {
             return fibonacciNumbers; 
@@ -44,7 +44,7 @@ public class NumberUtility {
         return fibonacciNumbers;
     }
     
-    public static Boolean GetChekcPolindrom(Long numberToCheck) {
+    public static Boolean getChekcPolindrom(Long numberToCheck) {
         if (numberToCheck == null) {
             return false;
         }
