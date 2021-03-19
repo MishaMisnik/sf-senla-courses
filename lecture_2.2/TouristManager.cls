@@ -27,7 +27,7 @@ public class TouristManager {
     }
     
     public static List<Tourist__c> getByDateStart(Date startDate) {
-        Date firstDate = startDate.addYears(-1);
+        Date firstDate = startDate;
         Date secondDate = startDate.addYears(1);
         
         return [
