@@ -1,0 +1,8 @@
+ExceptionHw TestExceptionHw = new ExceptionHw();
+Integer a = 10;
+Integer b = 20;
+Integer c = 0;
+
+system.debug(TestExceptionHw.first(a,b));
+system.debug(TestExceptionHw.second(b,c));
+TestExceptionHw.third(a,b);
