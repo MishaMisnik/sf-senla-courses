@@ -1,25 +1,21 @@
 trigger TouristTrigger on Tourist__c (after insert, after update) {
-	
+
     switch on Trigger.operationType {
-        
         when AFTER_INSERT {
             TouristService.markDuplicates(Trigger.new);
         }
         
         when AFTER_UPDATE {
+            List<Tourist__c> Tourists = new List<Tourist__c> ();
             
-            for (Tourist__c tourist : trigger.new){
-                
-                if (!tourist.Active__c){
-                    List<Flight__c> flightsToDelete = [
-						SELECT id
-						FROM Flight__c
-						WHERE Trip__r.Start_Date__c > :date.today() AND Tourist__c = :tourist.Id
-					];
-                    
-            		delete flightsToDelete;
+            for (Tourist__c tourist : trigger.new) {
+                if (!tourist.Active__c) {
+                    Tourists.add(tourist);
                 }
             }
+            List<Flight__c> flightsToDelete = FlightManager.getByStartDateAndTouristId(Tourists); 
+            
+            delete flightsToDelete;
         }
     }
 }

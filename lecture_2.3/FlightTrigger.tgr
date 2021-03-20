@@ -1,29 +1,23 @@
 trigger FlightTrigger on Flight__c (before insert) {
-	
+
     switch on Trigger.operationType {
-        
         when BEFORE_INSERT {
+            List<Trip__c> Trips = TripManager.getByFlight(Trigger.new);
+            List<Tourist__c> Tourists = TouristManager.getByFlight(Trigger.new);
+            
             for (Flight__c flight : Trigger.new) {
-                Trip__c trip = [
-                	SELECT id, Minimal_Age__c, Start_Date__c
-                    FROM Trip__c
-                    WHERE id = :flight.Trip__c
-                ];
-                
-                Tourist__c tourist = [
-                    SELECT id, Age__c
-                    FROM Tourist__c
-                    WHERE id = :flight.Tourist__c
-                ];
-                
-                if (trip.Minimal_Age__c > tourist.Age__c) {
-                    	flight.Trip__c.addError('Age too young for this flight');
-                } 
-                
-                if (trip.Start_Date__c < date.today()) {
-                    flight.Trip__c.addError('This flight has already departed');
+                for (Trip__c trip : Trips) {
+                    if (trip.Start_Date__c < date.today()) {
+                        flight.Trip__c.addError('This flight has already departed');
+                    }
+                    
+                    for (Tourist__c tourist : tourists) {
+                        if (trip.Minimal_Age__c > tourist.Age__c) {
+                            flight.Trip__c.addError('Age too young for this flight');
+                        } 
+                    }
                 }
-            }
+            } 
         }
     }
 }
