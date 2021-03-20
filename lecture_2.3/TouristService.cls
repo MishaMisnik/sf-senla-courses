@@ -1,11 +1,9 @@
 public class TouristService {
-    
     public static void markDuplicates(List<Tourist__c> newTourists) {
         if (newTourists!=null && !newTourists.isEmpty()) {
-<<<<<<< Updated upstream
-	    List<Tourist__c> updateTourists = new List<Tourist__c> {};
+            List<Tourist__c> updateTourists = new List<Tourist__c> ();
         
-	    for (Tourist__c tourist : newTourists) {
+            for (Tourist__c tourist : newTourists) {
             	List<Tourist__c> similarTourists = TouristManager.getByNameAndEmailWithoutDuplicates(tourist.LastName__c, tourist.Email__c);
         
         	if (similarTourists != null && !similarTourists.isEmpty()) {
@@ -13,23 +11,7 @@ public class TouristService {
          	    updateTourists.add(tourist);
         	}
             }
-        
-	    update updateTourists;
-	}
-=======
-            List<Tourist__c> updateTourists = new List<Tourist__c> {};
-        
-            for (Tourist__c tourist : newTourists) {
-                List<Tourist__c> similarTourists = TouristManager.getByNameAndEmailWithoutDuplicates(tourist.LastName__c, tourist.Email__c);
-        
-                if (similarTourists != null && !similarTourists.isEmpty()) {
-                    tourist.IsDuplicate__c = true;
-                    updateTourists.add(tourist);
-               }
-            }
-        
             update updateTourists;
-        }
->>>>>>> Stashed changes
+	}
     }
 }
