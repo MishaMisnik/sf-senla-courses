@@ -12,9 +12,23 @@ public class TouristManager {
         ];
     }
     
-    public static List<Tourist__c> getByAge(Set<Integer> ages) {
-        if (ages.contains(null)) {
+    public static List<Tourist__c> getByNameAndEmailWithoutDuplicates(String name, String Email) {
+        if (String.isBlank(name) || String.isBlank(Email)) {
             return new List<Tourist__c>();
+        }
+        
+        return [
+            SELECT LastName__c,
+            	   Email__c,
+            	   IsDuplicate__c
+            FROM Tourist__c
+            WHERE LastName__c = :name AND Email__c = :Email AND IsDuplicate__c = false
+        ];
+    }
+    
+    public static List<Tourist__c> getByAge(Set<Integer> ages) {
+        if (Ages.contains(null)) {
+			return new List<Tourist__c>();
         }
         
         return [
@@ -25,6 +39,9 @@ public class TouristManager {
     }
     
     public static List<Tourist__c> getByDateStart(Date startDate) {
+        if (startDate == null) {
+            return new List<Tourist__c>();
+        }
         Date firstDate = startDate;
         Date secondDate = startDate.addYears(1);
         
@@ -38,9 +55,20 @@ public class TouristManager {
     public static List<Tourist__c> getWithFlights() {
 
         return [
-            SELECT Name, age__c, 
+            SELECT Name, 
+            	   age__c, 
             	(SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
             FROM Tourist__c
+        ];
+    }
+    
+    public static List<Tourist__c> getWithoutFlightsAndAppropriateAge(Integer minimalAge) {
+        
+        return [
+            SELECT id, 
+				   Age__c
+			FROM Tourist__c
+			WHERE Age__c > :minimalAge AND Upcoming_Flight_Count__c = 0 
         ];
     }
     
