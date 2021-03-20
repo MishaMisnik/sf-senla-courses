@@ -1,12 +1,12 @@
 public class TouristManager {
-
     public static List<Tourist__c> getByName(String name) {
         if (String.isBlank(name)) {
             return new List<Tourist__c>();
         }
         
         return [
-            SELECT Name, Age__c
+            SELECT Name, 
+		   Age__c
             FROM Tourist__c
             WHERE name LIKE :('%' + name + '%')
         ];
@@ -32,9 +32,10 @@ public class TouristManager {
         }
         
         return [
-            SELECT Name, Age__c
+            SELECT Name, 
+		   Age__c
             FROM Tourist__c
-            WHERE Age__c IN :Ages
+            WHERE Age__c IN :ages
         ];
     }
     
@@ -46,7 +47,8 @@ public class TouristManager {
         Date secondDate = startDate.addYears(1);
         
         return [
-            SELECT Name, Age__c
+            SELECT Name, 
+		   Age__c
             FROM Tourist__c
             WHERE id IN (SELECT Tourist__c FROM Flight__c WHERE Trip__r.Start_Date__c >= :firstDate AND Trip__r.Start_Date__c <= :secondDate)
         ];
@@ -75,9 +77,28 @@ public class TouristManager {
     public static List<Tourist__c> getCountFlights() {
 
         return [
-            SELECT Name, age__c
+            SELECT Name, 
+		   age__c
             FROM Tourist__c
             WHERE Upcoming_Flight_Count__c = 0
         ];
+    }
+	
+    public static List<Tourist__c> getByFlight(List<Flight__c> Flights) {
+        if (Flights.contains(null)) {
+            return new List<Tourist__c>();
+        }
+        List<Tourist__c> Tourists = new List<Tourist__c> ();
+        
+        for (Flight__c Flight : Flights) {
+            Tourists.add([
+                SELECT id, 
+		       Age__c
+                FROM Tourist__c
+                WHERE id = :flight.Tourist__c
+            ]);
+        }
+        
+        return Tourists;
     }
 }
