@@ -28,7 +28,7 @@ public class TouristManager {
     
     public static List<Tourist__c> getByAge(Set<Integer> ages) {
         if (Ages.contains(null)) {
-			return new List<Tourist__c>();
+	    return new List<Tourist__c>();
         }
         
         return [
@@ -57,7 +57,7 @@ public class TouristManager {
         return [
             SELECT Name, 
             	   age__c, 
-            	(SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
+            	   (SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
             FROM Tourist__c
         ];
     }
@@ -66,9 +66,9 @@ public class TouristManager {
         
         return [
             SELECT id, 
-				   Age__c
-			FROM Tourist__c
-			WHERE Age__c > :minimalAge AND Upcoming_Flight_Count__c = 0 
+		   Age__c
+	    FROM Tourist__c
+	    WHERE Age__c > :minimalAge AND Upcoming_Flight_Count__c = 0 
         ];
     }
     
