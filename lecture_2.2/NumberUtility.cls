@@ -4,7 +4,7 @@ public class NumberUtility {
         if (endNumber <= 0 ) {
             return new List<Integer> (); 
         }
-        List<Integer> primeNumbers =  new List<Integer> {}; 
+        List<Integer> primeNumbers =  new List<Integer> (); 
         
         for (Integer i = 2; i < endNumber; i++) {
             Integer check = 0;
