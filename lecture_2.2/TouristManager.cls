@@ -65,7 +65,10 @@ public class TouristManager {
     }
     
     public static List<Tourist__c> getWithoutFlightsAndAppropriateAge(Integer minimalAge) {
-        
+        if (minimalAge == null) {
+	    return new List<Tourist__c>();
+	}
+	    
         return [
             SELECT id, 
 		   Age__c
