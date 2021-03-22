@@ -1,5 +1,5 @@
 trigger TouristTrigger on Tourist__c (after insert, after update) {
-
+	
     switch on Trigger.operationType {
         when AFTER_INSERT {
             TouristService.markDuplicates(Trigger.new);
@@ -15,7 +15,9 @@ trigger TouristTrigger on Tourist__c (after insert, after update) {
             }
             List<Flight__c> flightsToDelete = FlightManager.getByStartDateAndTouristId(Tourists); 
             
-            delete flightsToDelete;
+            if (flightsToDelete != null && !flightsToDelete.isEmpty()) {
+                delete flightsToDelete; 
+            }
         }
     }
 }
