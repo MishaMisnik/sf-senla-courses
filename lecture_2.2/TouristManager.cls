@@ -9,7 +9,7 @@ public class TouristManager {
             SELECT Name, 
                    Age__c
             FROM Tourist__c
-            WHERE name LIKE :('%' + name + '%')
+            WHERE Name LIKE :('%' + name + '%')
         ];
     }
     
@@ -93,7 +93,7 @@ public class TouristManager {
         ];
     }
     
-    public static List<Tourist__c> getByFlight(list<Flight__c> Flights) {
+    public static List<Tourist__c> getByFlight(List<Flight__c> Flights) {
         if (Flights.contains(null)) {
             return new List<Tourist__c>();
         }
