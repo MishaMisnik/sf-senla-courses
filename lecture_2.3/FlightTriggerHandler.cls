@@ -1,6 +1,6 @@
 public class FlightTriggerHandler {
-	public static Boolean onBeforeInsertIsFirstTime = true;
-	public static final String ERROR_INSUFFICIENT_MINIMAL_AGE = 'Age too young for this flight';
+    public static Boolean onBeforeInsertIsFirstTime = true;
+    public static final String ERROR_INSUFFICIENT_MINIMAL_AGE = 'Age too young for this flight';
     public static final String ERROR_DEPARTURE_FLIGHT = 'This flight has already departed';
     
     public static void onBeforeInsert (List<Flight__c> newFlights) {
