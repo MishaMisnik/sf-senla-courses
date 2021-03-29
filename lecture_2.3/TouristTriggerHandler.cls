@@ -1,5 +1,5 @@
 public class TouristTriggerHandler{
-	public static Boolean onBeforeInsertIsFirstTime = true;
+    public static Boolean onBeforeInsertIsFirstTime = true;
     public static Boolean onAfterUpdateIsFirstTime = true;
         
     public static void onBeforeInsert (List<Tourist__c> newTourists) {
