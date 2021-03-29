@@ -4,16 +4,16 @@ public class FlightManager {
         if (tourists.contains(null)) {
             return new List<Flight__c>();
         }
-            Set<Id> touristsId = new Set<Id> ();
+        Set<Id> touristsId = new Set<Id> ();
 
         for (Tourist__c tourist : tourists) {
-             touristsId.add(tourist.Id);
+            touristsId.add(tourist.Id);
         }
 
         return [
-            	SELECT id
-                FROM Flight__c
-                WHERE (Tourist__c IN :touristsId AND Trip__r.Start_Date__c > :date.today())
-            ];
+            SELECT id
+            FROM Flight__c
+            WHERE (Tourist__c IN :touristsId AND Trip__r.Start_Date__c > :date.today())
+        ];
     }
 }
