@@ -11,7 +11,7 @@ public class CreateNewFlight {
             for (Tourist__c tourist : selectedTourists) {
                 Flight__c flight = new Flight__c(
                     Tourist__c = tourist.id,
-                  	Trip__c = trip.id
+                    Trip__c = trip.id
                 );
                 flights.add(flight);
             }
