@@ -5,7 +5,7 @@ public class TouristService {
         
         List<Tourist__c> updateTourists = new List<Tourist__c> {};
         List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists);
-
+        //Duplicate_Check__c - formula field: LastName__c + Email__c
         for (Tourist__c tourist : newTourists) {
             Boolean check = true;
             Boolean isDuplicate = false;
