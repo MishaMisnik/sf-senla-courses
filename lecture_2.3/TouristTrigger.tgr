@@ -1,22 +1,17 @@
-trigger TouristTrigger on Tourist__c (after insert, after update) {
-	
+trigger TouristTrigger on Tourist__c (before insert, after update) {
+    
     switch on Trigger.operationType {
-        when AFTER_INSERT {
-            TouristService.markDuplicates(Trigger.new);
+        when BEFORE_INSERT {
+            if (TouristTriggerHandler.onBeforeInsertIsFirstTime) {
+                TouristTriggerHandler.onBeforeInsert(trigger.new);
+                TouristTriggerHandler.onBeforeInsertIsFirstTime = false;
+            }
         }
         
         when AFTER_UPDATE {
-            List<Tourist__c> Tourists = new List<Tourist__c> ();
-            
-            for (Tourist__c tourist : trigger.new) {
-                if (!tourist.Active__c) {
-                    Tourists.add(tourist);
-                }
-            }
-            List<Flight__c> flightsToDelete = FlightManager.getByStartDateAndTouristId(Tourists); 
-            
-            if (flightsToDelete != null && !flightsToDelete.isEmpty()) {
-                delete flightsToDelete; 
+            if (TouristTriggerHandler.onAfterUpdateIsFirstTime) {
+                TouristTriggerHandler.onAfterUpdate(trigger.new, trigger.old);
+                TouristTriggerHandler.onAfterUpdateIsFirstTime = false;
             }
         }
     }

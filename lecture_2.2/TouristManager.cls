@@ -6,37 +6,65 @@ public class TouristManager {
         }
         
         return [
-            SELECT Name, 
+            SELECT Name,
                    Age__c
             FROM Tourist__c
             WHERE Name LIKE :('%' + name + '%')
         ];
     }
     
-    public static List<Tourist__c> getByNameAndEmailWithoutDuplicates(String name, String Email) {
-        if (String.isBlank(name) || String.isBlank(Email)) {
+    public static Map<Id, Tourist__c> getById(Set<Id> touristIds) {
+        if (touristIds.contains(null)) {
+            return new Map<Id, Tourist__c>();
+        }
+        
+        List<Tourist__c> tourists = [
+            SELECT Id, 
+                   Age__c
+            FROM Tourist__c
+            WHERE Id In :touristIds
+        ];
+        Map<Id, Tourist__c> touristMap = new Map<Id, Tourist__c>(tourists);
+        
+        return touristMap;
+    }
+    
+    public static List<Tourist__c> getByLastNameAndEmail(List<Tourist__c> tourists) {
+        if (tourists.contains(null)) {
             return new List<Tourist__c>();
         }
         
+        Set<Id> touristIds = new Set<Id>();
+        Set<String> touristsChekcDuplicate = new Set<String>();
+        
+        
+        for (Tourist__c tourist : tourists) {
+            touristIds.add(tourist.Id);
+        }
+        
+        for (Tourist__c tourist : tourists) {
+            touristsChekcDuplicate.add(tourist.Duplicate_Check__c);
+        }
+
         return [
             SELECT LastName__c,
-            	   Email__c,
-            	   IsDuplicate__c
+                   Email__c,
+                   IsDuplicate__c
             FROM Tourist__c
-            WHERE LastName__c = :name AND Email__c = :Email AND IsDuplicate__c = false
+            WHERE Duplicate_Check__c IN :touristsChekcDuplicate AND Id NOT IN :touristIds
         ];
     }
     
     public static List<Tourist__c> getByAge(Set<Integer> ages) {
-        if (Ages.contains(null)) {
-			return new List<Tourist__c>();
+        if (ages.contains(null)) {
+            return new List<Tourist__c>();
         }
         
         return [
             SELECT Name, 
                    Age__c
             FROM Tourist__c
-            WHERE Age__c IN :Ages
+            WHERE Age__c IN :ages
         ];
     }
     
@@ -49,7 +77,7 @@ public class TouristManager {
         
         return [
             SELECT Name, 
-            	   Age__c
+                   Age__c
             FROM Tourist__c
             WHERE id IN (SELECT Tourist__c FROM Flight__c WHERE Trip__r.Start_Date__c >= :firstDate AND Trip__r.Start_Date__c <= :secondDate)
         ];
@@ -59,28 +87,30 @@ public class TouristManager {
 
         return [
             SELECT Name, 
-            	   age__c, 
-            	   (SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
+                   age__c, 
+                  (SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
             FROM Tourist__c
         ];
     }
     
-    public static List<Tourist__c> getWithoutFlightsAndAppropriateAge(List<Trip__c> Trips) {
-        if (Trips.contains(null)) {
+    public static List<Tourist__c> getWithoutFlightsAndAppropriateAge(List<Trip__c> trips) {
+        if (trips.contains(null)) {
             return new List<Tourist__c>();
         }
-        List<Tourist__c> Tourists = new List<Tourist__c> ();
+        Integer tripMinimalAge = trips[0].Minimal_Age__c.intValue();
         
-        for (Trip__c trip : Trips) {
-            Tourists.addAll([
+        for (Trip__c trip : trips) {
+            if (tripMinimalAge < trip.Minimal_Age__c) {
+                tripMinimalAge = trip.Minimal_Age__c.intValue();
+            }
+        }
+
+        return [
                 SELECT Upcoming_Flight_Count__c, 
                        Age__c
                 FROM Tourist__c
-                WHERE (Age__c > :trip.Minimal_Age__c AND Upcoming_Flight_Count__c = 0)
-            ]);
-        }
-        
-        return Tourists;
+                WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
+            ];
     }
     
     public static List<Tourist__c> getCountFlights() {
@@ -93,21 +123,20 @@ public class TouristManager {
         ];
     }
     
-    public static List<Tourist__c> getByFlight(List<Flight__c> Flights) {
-        if (Flights.contains(null)) {
+    public static List<Tourist__c> getTouristByFlight(List<Flight__c> flights) {
+        if (flights.contains(null)) {
             return new List<Tourist__c>();
         }
-		List<Tourist__c> Tourists = new List<Tourist__c> ();
+        Set<Id> touristsId = new Set<Id> ();
         
-        for (Flight__c Flight : Flights) {
-             Tourists.add([
-            	SELECT id, 
-                       Age__c
-                FROM Tourist__c
-                WHERE id = :flight.Tourist__c
-        	]);
+        for (Flight__c flight : flights) {
+            touristsId.add(flight.Tourist__c);
         }
         
-        return Tourists;
+        return [
+                SELECT Age__c
+                FROM Tourist__c
+                WHERE id IN :touristsId
+            ];
     }
 }
