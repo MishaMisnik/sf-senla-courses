@@ -1,0 +1,10 @@
+List<Tourist__c> emptyListTourists = new List<Tourist__c>();
+List<Tourist__c> listWithTourists = [
+    SELECT Id
+    FROM Tourist__c
+    WHERE Id = 'a005g00002rTpQWAA0'
+];
+
+ExceptionsPlayground.generateCustomException(emptyListTourists);
+ExceptionsPlayground.generateRegularException(emptyListTourists);
+ExceptionsPlayground.handleExceptions(listWithTourists);

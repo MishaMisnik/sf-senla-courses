@@ -1,43 +1,39 @@
-public class ExceptionHw {
+public class ExceptionsPlayground {
+    public static final String ERROR_INCOMING_DATA = 'Incoming data is empty';
+    
     public class CustomException extends Exception{}
     
-    public integer first(integer a, integer b) {
-		Integer i;		
-        
+    public static void generateCustomException(List<Tourist__c> newTourists) {	
+    
         try {
-            i = a / b;
-            if (i < 2) {
-                throw new CustomException('your result is too small');    
+            if (newTourists == null  || newTourists.isEmpty()) {
+                throw new CustomException(ERROR_INCOMING_DATA);    
+            }else{
+                insert newTourists;
             }
         } catch(CustomException e) {
             System.debug(e.getMessage());
         }
-        
-        return i;
     } 
     
-    public integer second(integer a, integer b) {
-        Integer i;
-        
+    public static void generateRegularException(List<Tourist__c> newTourists) {
+                
         try {
-            i = a / b;
-        } catch(Exception ex) {
-            System.debug(ex.getMessage());
+            insert newTourists;
+        } catch(CustomException e) {
+            System.debug(e.getMessage());
         }
-        return i;
-        
     } 
     
-    public void third(integer a, integer b) {
-        integer i;
+    public static void handleExceptions(List<Tourist__c> newTourists) {
 
         try {
-            i = second(a, a) / first(b, b);
+            generateCustomException(newTourists);
+            generateRegularException(newTourists);
         } catch(Exception ex) {
             System.debug(ex.getMessage());
         } finally {
             System.debug('Final');
-            System.debug('Result:' + i);
         }
     } 
 }
