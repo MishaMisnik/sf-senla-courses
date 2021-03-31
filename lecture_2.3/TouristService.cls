@@ -1,23 +1,28 @@
 public class TouristService {
     
-    public static void markDuplicates(List<Tourist__c> newTourists) {
-        if (newTourists == null  || newTourists.isEmpty()) return;
+    @Future
+    public static void markDuplicates(Set<Id> touristIds) {
+        if (touristIds == null  || touristIds.isEmpty()) return;
         
-        List<Tourist__c> updateTourists = new List<Tourist__c> {};
-        List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists);
-        //Duplicate_Check__c - formula field: LastName__c + Email__c
-        for (Tourist__c tourist : newTourists) {
-            Boolean check = true;
+        Map<Id, Tourist__c> newTourists = TouristManager.getById(touristIds);
+        List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists.values());
+        List<Tourist__c> updateTourists = new List<Tourist__c> ();
+
+            
+        for (Tourist__c tourist : newTourists.values()) {
+            Boolean flag = true;
             Boolean isDuplicate = false;
             
-            for (Tourist__c similarTourist : similarTourists) {
-                if (similarTourist.Duplicate_Check__c.contains(tourist.Duplicate_Check__c) && check) {
-                    isDuplicate = true;
-                    check = false;
-                }
+            for (Tourist__c similartourist : similarTourists) {
+                while (flag) {
+                    if (similarTourist.Duplicate_Check__c.contains(tourist.Duplicate_Check__c)) {
+                        isDuplicate = true;
+                        flag = false;
+                    }
+                } 
             }
-            
-            if (isDuplicate) {
+       
+      	    if (isDuplicate) {
                 tourist.IsDuplicate__c = true;
                 updateTourists.add(tourist);
             }
