@@ -7,7 +7,6 @@ public class TouristService {
         Map<Id, Tourist__c> newTourists = TouristManager.getById(touristIds);
         List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists.values());
         List<Tourist__c> updateTourists = new List<Tourist__c> ();
-
             
         for (Tourist__c tourist : newTourists.values()) {
             Boolean flag = true;
