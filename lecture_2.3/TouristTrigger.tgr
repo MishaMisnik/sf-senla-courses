@@ -10,7 +10,7 @@ trigger TouristTrigger on Tourist__c (before insert, after update) {
         
         when AFTER_UPDATE {
             if (TouristTriggerHandler.onAfterUpdateIsFirstTime) {
-                TouristTriggerHandler.onAfterUpdate(Trigger.new, trigger.old);
+                TouristTriggerHandler.onAfterUpdate(Trigger.newMap, Trigger.oldMap);
                 TouristTriggerHandler.onAfterUpdateIsFirstTime = false;
             }
         }
