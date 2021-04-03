@@ -4,7 +4,7 @@ public class TouristService {
     public static void markDuplicates(Set<Id> touristIds) {
         if (touristIds == null  || touristIds.isEmpty()) return;
         
-		Map<Id, Tourist__c> newTourists = TouristManager.getById(touristIds);
+        Map<Id, Tourist__c> newTourists = TouristManager.getById(touristIds);
         List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists.values());
         List<Tourist__c> updateTourists = new List<Tourist__c> ();
             
@@ -22,8 +22,8 @@ public class TouristService {
             }
        
       	    if (isDuplicate) {
-			    tourist.IsDuplicate__c = true;
-         	    updateTourists.add(tourist);
+                tourist.IsDuplicate__c = true;
+                updateTourists.add(tourist);
             }
         }
         
