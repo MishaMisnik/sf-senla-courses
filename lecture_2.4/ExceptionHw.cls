@@ -1,35 +1,22 @@
 public class ExceptionsPlayground {
-    public static final String ERROR_INCOMING_DATA = 'Incoming data is empty';
+    private static final String ERROR_INCOMING_DATA = 'Incoming data is empty';
     
     public class CustomException extends Exception{}
     
-    public static void generateCustomException(List<Tourist__c> newTourists) {	
-    
-        try {
-            if (newTourists == null  || newTourists.isEmpty()) {
-                throw new CustomException(ERROR_INCOMING_DATA);    
-            }else{
-                insert newTourists;
-            }
-        } catch(CustomException e) {
-            System.debug(e.getMessage());
-        }
+    public static void generateCustomException() {
+        throw new CustomException(ERROR_INCOMING_DATA);    
     } 
     
-    public static void generateRegularException(List<Tourist__c> newTourists) {
-                
-        try {
-            insert newTourists;
-        } catch(CustomException e) {
-            System.debug(e.getMessage());
-        }
+    public static void generateRegularException() {
+        integer i = 1 / 0;
     } 
     
-    public static void handleExceptions(List<Tourist__c> newTourists) {
-
+    public static void handleExceptions() {
         try {
-            generateCustomException(newTourists);
-            generateRegularException(newTourists);
+            generateCustomException();
+            generateRegularException();
+        } catch(CustomException ex) {
+            System.debug(ex.getMessage());
         } catch(Exception ex) {
             System.debug(ex.getMessage());
         } finally {
