@@ -32,7 +32,7 @@ public class TouristManager {
     
     public static List<Tourist__c> getByLastNameAndEmail(List<Tourist__c> tourists) {
         if (tourists.contains(null)) {
-			return new List<Tourist__c>();
+	    return new List<Tourist__c>();
         }
         
         Set<Id> touristIds = new Set<Id>();
@@ -59,7 +59,7 @@ public class TouristManager {
     
     public static List<Tourist__c> getByAge(Set<Integer> ages) {
         if (ages.contains(null)) {
-			return new List<Tourist__c>();
+            return new List<Tourist__c>();
         }
         
         return [
@@ -108,11 +108,11 @@ public class TouristManager {
         }
 
         return [
-                SELECT Upcoming_Flight_Count__c, 
-                       Age__c
-			    FROM Tourist__c
-			    WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
-            ];
+            SELECT Upcoming_Flight_Count__c, 
+                   Age__c
+            FROM Tourist__c
+            WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
+        ];
     }
     
     public static List<Tourist__c> getCountFlights() {
@@ -129,7 +129,7 @@ public class TouristManager {
         if (flights.contains(null)) {
             return new List<Tourist__c>();
         }
-		Set<Id> touristsId = new Set<Id> ();
+        Set<Id> touristsId = new Set<Id> ();
         
         for (Flight__c flight : flights) {
             touristsId.add(flight.Tourist__c);
@@ -139,6 +139,6 @@ public class TouristManager {
             	SELECT Age__c
                 FROM Tourist__c
                 WHERE id IN :touristsId
-        	];
+        ];
     }
 }
