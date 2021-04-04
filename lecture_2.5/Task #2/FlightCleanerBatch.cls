@@ -17,29 +17,29 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
             if (countDeleteFlights.containsKey(flight.Tourist__c)){
                 count = countDeleteFlights.get(flight.Tourist__c) + 1;
                 countDeleteFlights.put(flight.Tourist__c, count);
-                flightsToDelete.add(flight);
             } else {
                 count++;
                 countDeleteFlights.put(flight.Tourist__c, count);
-                flightsToDelete.add(flight);
             }
+            flightsToDelete.add(flight);
         }
-        
+        system.debug(flightsToDelete);
         delete flightsToDelete;
     }
     
     public void finish(Database.BatchableContext bc) {
 		Map<Tourist__c, integer> result = convertMaps(countDeleteFlights);
         List<String> emails = getMetadataEmails();
-        
+
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
 		message.toAddresses = emails;
         message.subject = 'HW';
-        message.plainTextBody = ' ';
+        message.plainTextBody = 'Список туристов: ';
         for (Tourist__c tourist : result.keySet()) {
             message.plainTextBody += ' У пользователя ' + tourist.Name + ' удалено : ' + result.get(tourist) + ' рейса; ';
         }
-        Messaging.SingleEmailMessage[] messages =   new List<Messaging.SingleEmailMessage> {message};
+        Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage> {message};
+        
         Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
     }
     
@@ -54,7 +54,7 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
         return result; 
     }
     
-    private static List<String> getMetadataEmails () {
+    public static List<String> getMetadataEmails () {
         List<Data__mdt> metaData = [
         	SELECT Email__c
             FROM Data__mdt
@@ -64,7 +64,7 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
         for (Data__mdt data : metaData){
   			emails.add(data.Email__c);
 		}
-        
+
         return emails;
     }
 }
