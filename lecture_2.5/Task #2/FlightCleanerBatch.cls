@@ -1,5 +1,5 @@
 public class FlightCleanerBatch implements Database.Batchable<SObject>, Database.Stateful, Database.RaisesPlatformEvents {
-	private static String status = 'Declined';
+    private static String status = 'Declined';
     //Days_After_Create__c - formula field: TODAY() - DATEVALUE( CreatedDate )
     private static String query = 'SELECT Id FROM Flight__c WHERE Status__c = :status AND Days_After_Create__c > 30';
     private static Map<Id, Integer> countDeleteFlights = new Map<Id, Integer>();
@@ -28,11 +28,11 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
     }
     
     public void finish(Database.BatchableContext bc) {
-		Map<Tourist__c, integer> result = convertMaps(countDeleteFlights);
+        Map<Tourist__c, integer> result = convertMaps(countDeleteFlights);
         List<String> emails = getMetadataEmails();
 
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-		message.toAddresses = emails;
+        message.toAddresses = emails;
         message.subject = 'HW';
         message.plainTextBody = 'Список туристов: ';
         for (Tourist__c tourist : result.keySet()) {
@@ -56,14 +56,14 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
     
     public static List<String> getMetadataEmails () {
         List<Data__mdt> metaData = [
-        	SELECT Email__c
+            SELECT Email__c
             FROM Data__mdt
         ];
         List<String> emails = new List<String>();
         
         for (Data__mdt data : metaData){
-  			emails.add(data.Email__c);
-		}
+            emails.add(data.Email__c);
+	}
 
         return emails;
     }
