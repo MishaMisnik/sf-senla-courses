@@ -1,0 +1,2 @@
+public static String cron = '0 0 0 * * ?';
+system.schedule('TestScheduleJob', cron, new FlightWorkSchedule());
