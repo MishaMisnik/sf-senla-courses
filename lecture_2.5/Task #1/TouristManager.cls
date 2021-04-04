@@ -136,9 +136,9 @@ public class TouristManager {
         }
         
         return [
-            	SELECT Age__c
-                FROM Tourist__c
-                WHERE id IN :touristsId
+            SELECT Age__c
+            FROM Tourist__c
+            WHERE id IN :touristsId
         ];
     }
 }
