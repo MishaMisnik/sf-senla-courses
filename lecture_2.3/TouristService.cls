@@ -1,5 +1,5 @@
 public class TouristService {
-    
+
     @Future
     public static void markDuplicates(Set<Id> touristIds) {
         if (touristIds == null  || touristIds.isEmpty()) return;
@@ -9,24 +9,20 @@ public class TouristService {
         List<Tourist__c> updateTourists = new List<Tourist__c> ();
             
         for (Tourist__c tourist : newTourists.values()) {
-            Boolean flag = true;
             Boolean isDuplicate = false;
             
             for (Tourist__c similartourist : similarTourists) {
-                while (flag) {
-                    if (similarTourist.Duplicate_Check__c.contains(tourist.Duplicate_Check__c)) {
-                        isDuplicate = true;
-                        flag = false;
-                    }
+                while (!isDuplicate && similarTourist.Duplicate_Check__c.contains(tourist.Duplicate_Check__c)) {
+                    isDuplicate = true;
                 } 
-            }
-       
-      	    if (isDuplicate) {
+            }  
+
+            if (isDuplicate) {
                 tourist.IsDuplicate__c = true;
-                updateTourists.add(tourist);
+         	    updateTourists.add(tourist);
             }
         }
-        
+
         update updateTourists;
     }
 }
