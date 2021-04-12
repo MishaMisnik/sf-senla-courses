@@ -1,5 +1,5 @@
 trigger FlightCleanerTrigger on BatchApexErrorEvent (after insert) {
-	Set<Id> asyncApexJobIds = new Set<Id>();
+    Set<Id> asyncApexJobIds = new Set<Id>();
     
     for(BatchApexErrorEvent event : Trigger.new){
         asyncApexJobIds.add(event.AsyncApexJobId);
