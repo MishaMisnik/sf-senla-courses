@@ -6,7 +6,7 @@ public class BatchService {
         
         for (Tourist__c tourist : tourists) {
             result.put(tourist, countDeleteFlights.get(tourist.id));
-	}
+        }
         
         return result;
     }
@@ -30,7 +30,7 @@ public class BatchService {
     
     public static void sendEmails (List<String> emails, Map<Tourist__c, Integer> result) {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-	message.toAddresses = emails;
+        message.toAddresses = emails;
         message.subject = 'HW';
         message.plainTextBody = 'Список туристов: ';
         
