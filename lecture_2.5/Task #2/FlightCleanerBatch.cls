@@ -1,5 +1,5 @@
 public class FlightCleanerBatch implements Database.Batchable<SObject>, Database.Stateful, Database.RaisesPlatformEvents {
-     String status = 'Declined';
+    private String status = 'Declined';
     //Days_After_Create__c - formula field: TODAY() - DATEVALUE( CreatedDate )
     private String query = 'SELECT Id FROM Flight__c WHERE Status__c = :status AND Days_After_Create__c > 30';
     private Map<Id, Integer> countDeleteFlightsForTouristId = new Map<Id, Integer>();
