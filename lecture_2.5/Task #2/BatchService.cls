@@ -6,13 +6,13 @@ public class BatchService {
         
         for (Tourist__c tourist : tourists) {
             result.put(tourist, countDeleteFlights.get(tourist.id));
-	    }
+	}
         
         return result;
     }
     
     public static List<Id> deleteResults (List<Flight__c> flightsToDelete, Map<Id, Id> touristIdToFlightId) {
-		Database.DeleteResult[] deleteFlights = Database.delete(flightsToDelete, false);
+        Database.DeleteResult[] deleteFlights = Database.delete(flightsToDelete, false);
         List<Id> idsToRemove = new List<Id>();
         
         for (Database.DeleteResult remoteFlight : deleteFlights) {
@@ -30,7 +30,7 @@ public class BatchService {
     
     public static void sendEmails (List<String> emails, Map<Tourist__c, Integer> result) {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-		message.toAddresses = emails;
+	message.toAddresses = emails;
         message.subject = 'HW';
         message.plainTextBody = 'Список туристов: ';
         
