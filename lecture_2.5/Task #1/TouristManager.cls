@@ -20,7 +20,7 @@ public class TouristManager {
         
         List<Tourist__c> tourists = [
             SELECT Id, 
-            	   Age__c,
+                   Age__c,
                    Duplicate_Check__c
             FROM Tourist__c
             WHERE Id In :touristIds
@@ -30,9 +30,23 @@ public class TouristManager {
         return touristMap;
     }
     
+    public static List<Tourist__c> getListById(Set<Id> touristIds) {
+        if (touristIds.contains(null)) {
+            return new List<Tourist__c>();
+        } 
+
+        return [
+            SELECT Id, 
+              	   Age__c,
+                   Duplicate_Check__c
+            FROM Tourist__c
+            WHERE Id IN :touristIds
+        ];
+    }
+    
     public static List<Tourist__c> getByLastNameAndEmail(List<Tourist__c> tourists) {
         if (tourists.contains(null)) {
-	    return new List<Tourist__c>();
+            return new List<Tourist__c>();
         }
         
         Set<Id> touristIds = new Set<Id>();
@@ -49,8 +63,8 @@ public class TouristManager {
 
         return [
             SELECT LastName__c,
-            	   Email__c,
-            	   IsDuplicate__c,
+                   Email__c,
+                   IsDuplicate__c,
                    Duplicate_Check__c
             FROM Tourist__c
             WHERE Duplicate_Check__c IN :touristsChekcDuplicate AND Id NOT IN :touristIds
@@ -89,8 +103,8 @@ public class TouristManager {
 
         return [
             SELECT Name, 
-            	   age__c, 
-            	  (SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
+                   age__c, 
+                  (SELECT Trip__r.Start_Date__c, Trip__r.Name FROM Flights__r)
             FROM Tourist__c
         ];
     }
@@ -119,7 +133,7 @@ public class TouristManager {
 
         return [
             SELECT Name, 
-            	   age__c
+                   age__c
             FROM Tourist__c
             WHERE Upcoming_Flight_Count__c = 0
         ];
@@ -139,6 +153,18 @@ public class TouristManager {
             SELECT Age__c
             FROM Tourist__c
             WHERE id IN :touristsId
+        ];
+    }
+    
+    public static List<Tourist__c> getByRelationshipWithFlight (Set<Id> touristsIds) {
+        if (touristsIds.contains(null)) {
+            return new List<Tourist__c>();
+        }
+        
+        return [
+            SELECT Name
+            FROM Tourist__c
+            WHERE Id IN :touristsIds
         ];
     }
 }

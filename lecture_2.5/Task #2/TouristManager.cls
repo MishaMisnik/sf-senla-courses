@@ -20,7 +20,7 @@ public class TouristManager {
         
         List<Tourist__c> tourists = [
             SELECT Id, 
-            	   Age__c,
+                   Age__c,
                    Duplicate_Check__c
             FROM Tourist__c
             WHERE Id In :touristIds
@@ -30,9 +30,23 @@ public class TouristManager {
         return touristMap;
     }
     
+    public static List<Tourist__c> getListById(Set<Id> touristIds) {
+        if (touristIds.contains(null)) {
+            return new List<Tourist__c>();
+        } 
+
+        return [
+            SELECT Id, 
+              	   Age__c,
+                   Duplicate_Check__c
+            FROM Tourist__c
+            WHERE Id IN :touristIds
+        ];
+    }
+    
     public static List<Tourist__c> getByLastNameAndEmail(List<Tourist__c> tourists) {
         if (tourists.contains(null)) {
-	    return new List<Tourist__c>();
+            return new List<Tourist__c>();
         }
         
         Set<Id> touristIds = new Set<Id>();
@@ -49,8 +63,8 @@ public class TouristManager {
 
         return [
             SELECT LastName__c,
-            	   Email__c,
-            	   IsDuplicate__c,
+                   Email__c,
+                   IsDuplicate__c,
                    Duplicate_Check__c
             FROM Tourist__c
             WHERE Duplicate_Check__c IN :touristsChekcDuplicate AND Id NOT IN :touristIds
@@ -59,7 +73,7 @@ public class TouristManager {
     
     public static List<Tourist__c> getByAge(Set<Integer> ages) {
         if (ages.contains(null)) {
-	    return new List<Tourist__c>();
+            return new List<Tourist__c>();
         }
         
         return [
@@ -108,10 +122,10 @@ public class TouristManager {
         }
 
         return [
-	    SELECT Upcoming_Flight_Count__c, 
+            SELECT Upcoming_Flight_Count__c, 
                    Age__c
-	    FROM Tourist__c
-	    WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
+            FROM Tourist__c
+            WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
         ];
     }
     

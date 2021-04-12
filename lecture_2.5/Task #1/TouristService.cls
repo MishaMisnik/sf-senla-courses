@@ -4,11 +4,11 @@ public class TouristService {
     public static void markDuplicates(Set<Id> touristIds) {
         if (touristIds == null  || touristIds.isEmpty()) return;
         
-		Map<Id, Tourist__c> newTourists = TouristManager.getById(touristIds);
-        List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists.values());
+		List<Tourist__c> newTourists = TouristManager.getListById(touristIds);
+        List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists);
         List<Tourist__c> updateTourists = new List<Tourist__c> ();
             
-        for (Tourist__c tourist : newTourists.values()) {
+        for (Tourist__c tourist : newTourists) {
             Boolean isDuplicate = false;
             
             for (Tourist__c similartourist : similarTourists) {
