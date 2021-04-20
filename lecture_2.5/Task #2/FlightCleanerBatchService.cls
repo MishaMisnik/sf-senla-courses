@@ -1,5 +1,5 @@
 public class FlightCleanerBatchService {
-	
+    
     public static Map<Tourist__c, Integer> convertMaps (Map<Id, Integer> countDeleteFlights) {
         List<Tourist__c> tourists = TouristManager.getByRelationshipWithFlight(countDeleteFlights.keySet());
         Map<Tourist__c, integer> result = new Map<Tourist__c, Integer>();
@@ -11,25 +11,31 @@ public class FlightCleanerBatchService {
         return result;
     }
     
-    public static List<Id> deleteResults (List<Flight__c> flightsToDelete, Map<Id, Id> touristIdToFlightId) {
-        Database.DeleteResult[] deleteFlights = Database.delete(flightsToDelete, false);
-        List<Id> idsToRemove = new List<Id>();
+    public static Map<Id, Integer> deleteFlights (List<Flight__c> flights) {
+        Map<Id, Flight__c> flightsById = new Map<Id, Flight__c> (flights);
+        Map<Id, Integer> countDeleteFlightsForTouristId = new Map<Id, Integer> ();        
+        Database.DeleteResult[] deleteFlights = Database.delete(flights, false);
+        Integer count = 0;
         
         for (Database.DeleteResult remoteFlight : deleteFlights) {
-            if (!remoteFlight.isSuccess()) {
-                for (Id flightId : touristIdToFlightId.keySet()) {
-                    if (flightId == remoteFlight.getId()) {
-                        idsToRemove.add(remoteFlight.getId());
-                    }
+            if (remoteFlight.isSuccess()) {
+                count = 1;
+                
+                if (countDeleteFlightsForTouristId.containsKey(flightsById.get(remoteFlight.getId()).Tourist__c)){
+                    count += countDeleteFlightsForTouristId.get(flightsById.get(remoteFlight.getId()).Tourist__c);
+                    countDeleteFlightsForTouristId.put(flightsById.get(remoteFlight.getId()).Tourist__c, count);
+                } else {
+                    countDeleteFlightsForTouristId.put(flightsById.get(remoteFlight.getId()).Tourist__c, count);
                 }
             }
         }
         
-        return idsToRemove;
+        return countDeleteFlightsForTouristId;
     }
     
     public static void sendEmails (List<String> emails, Map<Tourist__c, Integer> result) {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
+        
         message.toAddresses = emails;
         message.subject = 'HW';
         message.plainTextBody = 'Список туристов: ';
