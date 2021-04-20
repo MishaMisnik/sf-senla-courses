@@ -1,4 +1,4 @@
-public class BatchService {
+public class FlightCleanerBatchService {
 	
     public static Map<Tourist__c, Integer> convertMaps (Map<Id, Integer> countDeleteFlights) {
         List<Tourist__c> tourists = TouristManager.getByRelationshipWithFlight(countDeleteFlights.keySet());
