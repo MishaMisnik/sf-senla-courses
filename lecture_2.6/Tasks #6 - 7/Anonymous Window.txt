@@ -1,0 +1,2 @@
+String cron = '0 0 3 * * ?';
+System.schedule('WeatherUpdate', cron, new WeatherForecastSchedule());
