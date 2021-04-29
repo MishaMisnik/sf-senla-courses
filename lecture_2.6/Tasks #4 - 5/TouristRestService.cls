@@ -1,62 +1,56 @@
 @RestResource(urlMapping = '/Tourist/*') 
 global class TouristRestService {
-	
+    static final String REQUEST_PARAM_NAME = 'fuzzyname';
+    static final String REQUEST_PARAM_AGE = 'age';
+    
     @HttpGet
-    global static List<List<Tourist__c>> getTourists() {
-        RestRequest req = RestContext.request;
-        RestResponse res = RestContext.response;
-        String name = req.params.get('fuzzyname');
-        String age = req.params.get('age');
-        Integer intAge;
-
-        if (name == null) {
-            res.responseBody = Blob.valueOf('The name must be not empty');
-            res.statusCode = 404;
-            return null;
+    global static List<Tourist__c> getTourists() {
+        RestRequest request = RestContext.request;
+        RestResponse response = RestContext.response;
+        String name = request.params.get(REQUEST_PARAM_NAME);
+        String age = request.params.get(REQUEST_PARAM_AGE);
+        List<Tourist__c> tourits = new List<Tourist__c> ();
+     
+        try {
+            TouristService.getTouristValidation(name, age);
+            tourits = TouristManager.getByNameAndAge(name, Integer.valueOf(age));
+            response.statusCode = Constants.OK_200;
+        } catch (RestRequestValidationException ex) {
+            response.responseBody = Blob.valueOf(ex.getMessage());
+            response.statusCode = ex.getStatusCode();
+        } catch (Exception ex) {
+            response.responseBody = Blob.valueOf(Constants.INTERNAL_ERROR);
+            response.statusCode = Constants.INTERNAL_ERROR_500; 
         }
         
-        if (age != null) {
-            if (!age.isNumeric()) {
-                res.responseBody = Blob.valueOf('The age must be a number');
-                res.statusCode = 404;
-                return null;
-            }
-            intAge = Integer.valueof(age);
-        }
-		
-        res.statusCode = 200;
-        return TouristRestManager.getByNameAndAge(name, intAge);
+        return tourits;
     }
-    
     
     @HttpPost
     global static Tourist__c createTourist(String name, String lastName, String email, String birthdate) {
-        Date dateBirthdate = Date.valueOf(birthdate);
-        String duplicateCheck = lastname + email;
-        RestRequest req = RestContext.request;
-        RestResponse res = RestContext.response;
+        RestRequest request = RestContext.request;
+        RestResponse response = RestContext.response;
+        Tourist__c tourist;
         
-        if (name == null || lastName == null || email == null || birthdate == null) {
-            res.responseBody = Blob.valueOf('Not all required fields have been entered');
-            res.statusCode = 404;
-            return null; 
+        try {
+            TouristService.createTouristValidation(name, lastName, email, birthdate);
+            tourist = new Tourist__c (
+                Name = name,
+                Email__c = email,
+                LastName__c = lastname,
+                Birthdate__c = Date.parse(birthdate)
+            );
+            
+            insert tourist;
+            response.statusCode = Constants.OK_200;
+        } catch (RestRequestValidationException ex) {
+            response.responseBody = Blob.valueOf(ex.getMessage());
+            response.statusCode = ex.getStatusCode();
+        } catch (Exception ex) {
+            response.responseBody = Blob.valueOf(Constants.INTERNAL_ERROR);
+            response.statusCode = Constants.INTERNAL_ERROR_500; 
         }
-        
-        Tourist__c tourist = new Tourist__c (
-            Name = name,
-            Email__c = email,
-            LastName__c = lastname,
-            Birthdate__c = dateBirthdate
-        );
-        
-        if (TouristService.isDuplicate(duplicateCheck)) {
-            res.responseBody = Blob.valueOf('Found duplicate');
-            res.statusCode = 409;
-            return null;    
-        }
-        
-        insert tourist;
-        res.statusCode = 200;
+
         return tourist;
     }
 }

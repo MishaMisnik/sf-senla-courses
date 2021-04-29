@@ -30,6 +30,20 @@ public class TouristManager {
         return touristMap;
     }
     
+    public static List<Tourist__c> getListById(Set<Id> touristIds) {
+        if (touristIds.contains(null)) {
+            return new List<Tourist__c>();
+        } 
+
+        return [
+            SELECT Id, 
+              	   Age__c,
+                   Duplicate_Check__c
+            FROM Tourist__c
+            WHERE Id IN :touristIds
+        ];
+    }
+    
     public static List<Tourist__c> getByLastNameAndEmail(List<Tourist__c> tourists) {
         if (tourists.contains(null)) {
 			return new List<Tourist__c>();
@@ -140,5 +154,53 @@ public class TouristManager {
                 FROM Tourist__c
                 WHERE id IN :touristsId
         	];
+    }
+    
+    public static List<Tourist__c> getByRelationshipWithFlight (Set<Id> touristsIds) {
+        if (touristsIds.contains(null)) {
+            return new List<Tourist__c>();
+        }
+        
+        return [
+            SELECT Name
+            FROM Tourist__c
+            WHERE Id IN :touristsIds
+        ];
+    }
+    
+    public static List<Tourist__c> getByDuplicateCheck(String duplicateCheck) {
+        if (duplicateCheck == null) {
+            return new List<Tourist__c>();
+        }
+
+        return [
+            SELECT Id
+            FROM Tourist__c
+            WHERE Duplicate_Check__c = :duplicateCheck
+            LIMIT 1
+        ];
+    }
+    
+    public static List<Tourist__c> getByNameAndAge(String name, Integer age) {
+        if (name == null) {
+            return new List<Tourist__c> (); 
+        }
+        List<List<Tourist__c>> tourists = new List<List<Tourist__c>>();
+        
+        if (age == null) {
+            tourists = [
+                FIND :name 
+                IN Name Fields
+                RETURNING Tourist__c(Name, Age__c)
+            ];
+        } else {
+            tourists = [
+                FIND :name 
+                IN Name Fields
+                RETURNING Tourist__c(Name, Age__c WHERE Age__c = :age)
+            ];
+        }
+
+        return tourists[0];
     }
 }
