@@ -1,91 +1,91 @@
-public class WeatherForecastService {
+public with sharing class WeatherForecastService {
     static final String WEATHER_BIT_DATA = 'data';
-    static final String WEATHER_BIT_VALID_DATE = 'valid_date';	
+    static final String WEATHER_BIT_VALID_DATE = 'valid_date';
     static final String WEATHER_BIT_TEMP = 'temp';
-    static final String endPoint = 'callout:Weatherbit';
+    static final Integer NUMBER_DAYS_TO_UPSERT  = 16;
     
-    public static Map<String, Object> getForecasts(Double latitude, Double longitude){
-        if (latitude == null || longitude == null) return new Map<String, Object>();
+    public static Map<Date, Decimal> getForecasts(Decimal latitude, Decimal longitude){
+        if (latitude == null || longitude == null) return new Map<Date, Decimal>();
         
+        Map<Date, Decimal> result = new Map<Date, Decimal>();
         Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        String url = endPoint + 
-                   + '?lat=' + latitude 
-                   + '&lon=' + longitude 
-                   + '&key=' + Constants.WEATHERBIT_KEY;
+        HttpResponse response = http.send(createrResponce(latitude, longitude));
         
-        request.setEndpoint(url);
-        request.setMethod(Constants.HTTP_METHOD_GET);
+        if (response.getStatusCode() == Constants.OK_200) {
+            Map<String, Object> weatherForSpacePoint = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
         
-        HttpResponse response = http.send(request);
-        Map<String, Object> result = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            List<Object> dataList = (List<Object>) weatherForSpacePoint.get(WEATHER_BIT_DATA);
+            List<Map<String, Object>> valuesByParameters = new List<Map<String, Object>>();
+            
+            for (Object objects : dataList) {
+                valuesByParameters.add((Map<String, Object>)objects);
+            }
+            
+            for (Map<String, Object> value : valuesByParameters) {
+                result.put(Date.valueOf(value.get(WEATHER_BIT_VALID_DATE).toString()) , 
+                (Decimal) (value.get(WEATHER_BIT_TEMP)));
+            }
+        }
         
         return result;
     }
     
     public static void weatherUpdate(){
-        List<Weather_Daily_Forecast__c> oldDailyWeather = WeatherManager.getWithOldDate();
-        Set<Id> spacePointsIds = new Set<Id>();
-        for (Weather_Daily_Forecast__c oldWeather : oldDailyWeather) {
-            spacePointsIds.add(oldWeather.Space_Point__c);
-        }
-        
-        Map<Id, Space_Point__c> spacePoints = SpacePointManager.getById(spacePointsIds);
-        
         List<Weather_Daily_Forecast__c> toUpsert = new List<Weather_Daily_Forecast__c>();
-        List<Weather_Daily_Forecast__c> toDelete = new List<Weather_Daily_Forecast__c>();
+        Map<Id, Space_Point__c> allSpacePoints = SpacePointManager.getAll();
+        delete WeatherManager.getWithOldDate();
         
-        for (Weather_Daily_Forecast__c oldWeather : oldDailyWeather) {
-            Double latitude = Double.valueOf(spacePoints.get(oldWeather.Space_Point__c).Latitude__c);
-            Double longitude = Double.valueOf(spacePoints.get(oldWeather.Space_Point__c).Longitude__c);
-            Map<String, Object> weatherForSpacePoint = WeatherForecastService.getForecasts(latitude, longitude);
-            
-            if (weatherForSpacePoint == null) return;	
-            
-            toDelete.add(oldWeather);
- 
-            List<Object> dataList = (List<object>) weatherForSpacePoint.get(WEATHER_BIT_DATA);
-            Map<String, Object> data = (Map<String, Object>)dataList[15];
-            
-            Date newDate = Date.valueOf(data.get(WEATHER_BIT_VALID_DATE).toString());
-            Double newAvTemp = Double.valueOf(data.get(WEATHER_BIT_TEMP));
-            
-            Weather_Daily_Forecast__c newWeather = new Weather_Daily_Forecast__c (
-                Space_Point__c = spacePoints.get(oldWeather.Space_Point__c).Id,
-                Date__c = Date.valueOf(data.get(WEATHER_BIT_VALID_DATE).toString()),
-                Average_Temperature__c = Double.valueOf(data.get(WEATHER_BIT_TEMP))
-            );
-            toUpsert.add(newWeather);
-        }
-        
-        upsert toUpsert;
-        delete toDelete;
-    }
+        for (Id spacePoint : allSpacePoints.keySet()) {
+            Decimal latitude = allSpacePoints.get(spacePoint).Latitude__c;
+            Decimal longitude = allSpacePoints.get(spacePoint).Longitude__c;
+            Map<Date, Decimal> weatherForSpacePoint = getForecasts(latitude, longitude);
+            Map<Date, Weather_Daily_Forecast__c> weather = WeatherManager.getBySpacePoint(spacePoint);
     
-    public static void weatherInsert(){
-        Map<Id, Space_Point__c> spacePoints = SpacePointManager.getAll();
-        List<Weather_Daily_Forecast__c> toInsert = new List<Weather_Daily_Forecast__c>();
-        
-        for (Space_Point__c spacePoint : spacePoints.values()) {
-            Double latitude = Double.valueOf(spacePoint.Latitude__c);
-            Double longitude = Double.valueOf(spacePoint.Longitude__c);
-            Map<String, Object> weatherForSpacePoint = WeatherForecastService.getForecasts(latitude, longitude);
-            
-            List<Object> dataList = (List<object>) weatherForSpacePoint.get(WEATHER_BIT_DATA);
-            
-            for (Integer i = 0; i < dataList.size(); i++) {
-                Map<String, Object> data =(Map<String, Object>)dataList[i];
+            for (Integer i = 0; i < NUMBER_DAYS_TO_UPSERT; i++) {
+                Date desiredDate = date.today().addDays(i);
                 
-                Weather_Daily_Forecast__c newWeather = new Weather_Daily_Forecast__c (
-                        Space_Point__c = spacePoint.Id,
-                        Date__c = Date.valueOf(data.get(WEATHER_BIT_VALID_DATE).toString()),
-                        Average_Temperature__c = Double.valueOf(data.get(WEATHER_BIT_TEMP))
-                );
-                
-                toInsert.add(newWeather);
+                if (weather.containsKey(desiredDate)) {
+                    Weather_Daily_Forecast__c dailyWeather = new Weather_Daily_Forecast__c(
+                        Id = weather.get(desiredDate).Id,
+                        Space_Point__c = spacePoint,
+                        Date__c = desiredDate,
+                        Average_Temperature__c = weatherForSpacePoint.get(desiredDate)
+                    );
+                    
+                    toUpsert.add(dailyWeather);
+                } else {
+                    Weather_Daily_Forecast__c dailyWeather = new Weather_Daily_Forecast__c(
+                        Space_Point__c = spacePoint,
+                        Date__c = desiredDate,
+                        Average_Temperature__c = weatherForSpacePoint.get(desiredDate)
+                    );
+                    
+                    toUpsert.add(dailyWeather);
+                }
             }
         }
         
-        insert toInsert;
+        try {
+            upsert toUpsert;
+        } catch (DmlException ex) {
+            System.debug(LoggingLevel.ERROR, ex.getMessage());
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, e.getMessage());
+        }
+    }
+    
+    public static HttpRequest createrResponce(Decimal latitude, Decimal longitude) {
+        if (latitude == null || longitude == null) return new HttpRequest();
+        
+        HttpRequest request = new HttpRequest();
+        String endPoint = Constants.WEATHERBIT_URL + 
+            + '?lat=' + latitude 
+            + '&lon=' + longitude 
+            + '&key=' + Constants.WEATHERBIT_KEY;
+        
+        request.setEndpoint(endPoint);
+        request.setMethod(Constants.HTTP_METHOD_GET);
+        
+        return request;
     }
 }

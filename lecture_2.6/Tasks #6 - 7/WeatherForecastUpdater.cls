@@ -1,11 +1,7 @@
 public class WeatherForecastUpdater {
 	
-    @Future
+    @future(callout=true)
     public static void updateForecasts() {
         WeatherForecastService.weatherUpdate();
-    }
-    
-    public static void insertForecasts() {
-        WeatherForecastService.weatherInsert();
     }
 }
