@@ -1,6 +1,6 @@
 @IsTest
 public class WeatherManagerUnitTest {
-    @testSetup
+    @TestSetup
     static void setup() {
         List<Weather_Daily_Forecast__c> weathers = new List<Weather_Daily_Forecast__c>{
             new Weather_Daily_Forecast__c(Space_Point__c = 'a045g000002X90pAAC', Date__c = Date.newInstance(2021, 04, 26)),
