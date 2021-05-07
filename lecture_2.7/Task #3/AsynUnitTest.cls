@@ -1,6 +1,6 @@
 @IsTest
 public class AsynUnitTest {
-    @testSetup
+    @TestSetup
     static void setup() {
         Tourist__c tourist = new Tourist__c(Name = 'Misha', LastName__c = 'Misnik', Email__c = 'misnik@salesforce.com', Birthdate__c = Date.newInstance(1997, 05, 05));
         insert tourist;
