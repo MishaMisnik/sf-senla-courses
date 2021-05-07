@@ -1,6 +1,6 @@
 @IsTest
 public class SpacePointManagerUnitTest {
-    @testSetup
+    @TestSetup
     static void setup() {
         List<Space_Point__c> spacePoints = new List<Space_Point__c>{
             new Space_Point__c(Name = '#1', Country__c = 'USA', City__c = 'Boston', Latitude__c = 42.21, Longitude__c = 71.03),
