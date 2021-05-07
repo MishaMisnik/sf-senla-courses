@@ -1,3 +1,4 @@
+@IsTest
 public class UnitTestFactory {
     
     public static Set<Id> getId (List<SObject> obj) {
