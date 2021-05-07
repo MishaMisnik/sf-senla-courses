@@ -1,6 +1,6 @@
 @IsTest
 public class TripManagerUnitTest {
-    @testSetup
+    @TestSetup
     static void setup() {
         List<Trip__c> trips = new List<Trip__c> {
             new Trip__c(Name = 'To Mars', Minimal_Age__c = 7, Start_Date__c = Date.newInstance(2021, 06, 06)),
