@@ -1,6 +1,6 @@
 @IsTest
 public class TouristTriggerUnitTest {   
-    @testSetup
+    @TestSetup
     static void setup() {
         List<Tourist__c> tourists = new List<Tourist__c> {
             new Tourist__c(Name = 'Misha', LastName__c = 'Misnik', Email__c = 'misnik@salesforce.com', Birthdate__c = Date.newInstance(1997, 05, 05)) 
