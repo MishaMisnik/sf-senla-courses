@@ -4,19 +4,17 @@ public with sharing class WeatherForecastService {
     static final String WEATHER_BIT_TEMP = 'temp';
     static final Integer NUMBER_DAYS_TO_UPSERT  = 16;
     
-    public static Map<Date, Decimal> getForecasts(Decimal latitude, Decimal longitude){
-        if (latitude == null || longitude == null) return new Map<Date, Decimal>();
+    public static Map<Date, Decimal> getForecasts(HttpResponse response){
+        if (response == null) return new Map<Date, Decimal>();
         
         Map<Date, Decimal> result = new Map<Date, Decimal>();
-        Http http = new Http();
-        HttpResponse response = http.send(createrResponce(latitude, longitude));
         
         if (response.getStatusCode() == Constants.OK_200) {
             Map<String, Object> weatherForSpacePoint = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
         
             List<Object> dataList = (List<Object>) weatherForSpacePoint.get(WEATHER_BIT_DATA);
             List<Map<String, Object>> valuesByParameters = new List<Map<String, Object>>();
-            
+        
             for (Object objects : dataList) {
                 valuesByParameters.add((Map<String, Object>)objects);
             }
@@ -25,20 +23,30 @@ public with sharing class WeatherForecastService {
                 result.put(Date.valueOf(value.get(WEATHER_BIT_VALID_DATE).toString()) , 
                 (Decimal) (value.get(WEATHER_BIT_TEMP)));
             }
+            system.debug(result);
+        } else {
+            System.debug(response.getStatusCode() + ' : ' + response.getBody());
         }
         
         return result;
     }
     
+    @future(callout=true)
     public static void weatherUpdate(){
         List<Weather_Daily_Forecast__c> toUpsert = new List<Weather_Daily_Forecast__c>();
         Map<Id, Space_Point__c> allSpacePoints = SpacePointManager.getAll();
-        delete WeatherManager.getWithOldDate();
+        List<Weather_Daily_Forecast__c> weatherWithOldDate = WeatherManager.getWithOldDate();
+		
         
         for (Id spacePoint : allSpacePoints.keySet()) {
             Decimal latitude = allSpacePoints.get(spacePoint).Latitude__c;
             Decimal longitude = allSpacePoints.get(spacePoint).Longitude__c;
-            Map<Date, Decimal> weatherForSpacePoint = getForecasts(latitude, longitude);
+			
+            Http http = new Http();
+            HttpRequest request = createrRequest(latitude, longitude);
+            HttpResponse response = http.send(request);
+            
+            Map<Date, Decimal> weatherForSpacePoint = getForecasts(response);
             Map<Date, Weather_Daily_Forecast__c> weather = WeatherManager.getBySpacePoint(spacePoint);
     
             for (Integer i = 0; i < NUMBER_DAYS_TO_UPSERT; i++) {
@@ -65,6 +73,8 @@ public with sharing class WeatherForecastService {
             }
         }
         
+        delete weatherWithOldDate;
+        
         try {
             upsert toUpsert;
         } catch (DmlException ex) {
@@ -74,15 +84,15 @@ public with sharing class WeatherForecastService {
         }
     }
     
-    public static HttpRequest createrResponce(Decimal latitude, Decimal longitude) {
+    public static HttpRequest createrRequest(Decimal latitude, Decimal longitude) {
         if (latitude == null || longitude == null) return new HttpRequest();
         
-        HttpRequest request = new HttpRequest();
         String endPoint = Constants.WEATHERBIT_URL + 
             + '?lat=' + latitude 
             + '&lon=' + longitude 
             + '&key=' + Constants.WEATHERBIT_KEY;
         
+        HttpRequest request = new HttpRequest();
         request.setEndpoint(endPoint);
         request.setMethod(Constants.HTTP_METHOD_GET);
         
