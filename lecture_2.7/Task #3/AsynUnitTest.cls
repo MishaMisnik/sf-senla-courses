@@ -22,12 +22,14 @@ public class AsynUnitTest {
         );
         
         Test.startTest();
-        Database.SaveResult result = Database.insert(tourist, false);
-        System.assert(result.isSuccess());
+            Database.SaveResult result = Database.insert(tourist, false);
+
+            System.assert(result.isSuccess());
         Test.stopTest();
         
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
-        system.assert(tourists[1].IsDuplicate__c);
+        
+        System.assert(tourists[1].IsDuplicate__c);
     }
     
     @IsTest
@@ -38,8 +40,8 @@ public class AsynUnitTest {
         Test.setCreatedDate(flights[0].Id, dt);
         
         Test.startTest();
-        FlightCleanerBatch flightBatch = new FlightCleanerBatch();
-        Database.executebatch(flightBatch);
+            FlightCleanerBatch flightBatch = new FlightCleanerBatch();
+            Database.executebatch(flightBatch);
         Test.stopTest();
         
         flights = UnitTestFactory.getFlights();
@@ -55,19 +57,21 @@ public class AsynUnitTest {
         Test.setCreatedDate(flights[0].Id, dt);
         
         Test.startTest();
-        
-        String cron = '0 0 0 15 3 ? 2022';
-        FlightWorkSchedule fws = new FlightWorkSchedule();
-        String jobId = System.schedule('Flight Cleaner Schedule',cron ,fws);
-        
+            String cron = '0 0 0 15 3 ? 2022';
+            FlightWorkSchedule fws = new FlightWorkSchedule();
+            String jobId = System.schedule('Flight Cleaner Schedule',cron ,fws);
         Test.stopTest();
         
         List<AsyncApexJob> jobsScheduled = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'ScheduledApex'];
+        
         System.assertEquals(1, jobsScheduled.size(), 'expecting one scheduled job');
+
         System.assertEquals('FlightWorkSchedule', jobsScheduled[0].ApexClass.Name, 'expecting specific scheduled job');
         
         List<AsyncApexJob> jobsApexBatch = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'BatchApex'];
+        
         System.assertEquals(1, jobsApexBatch.size(), 'expecting one apex batch job');
+        
         System.assertEquals('FlightCleanerBatch', jobsApexBatch[0].ApexClass.Name, 'expecting specific batch job');
     }
 }

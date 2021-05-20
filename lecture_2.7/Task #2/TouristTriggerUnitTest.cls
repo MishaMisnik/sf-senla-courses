@@ -28,12 +28,14 @@ public class TouristTriggerUnitTest {
         );
         
         Test.startTest();
-        Database.SaveResult result = Database.insert(tourist, false);
-        System.assert(result.isSuccess());
+            Database.SaveResult result = Database.insert(tourist, false);
+
+            System.assert(result.isSuccess());
         Test.stopTest();
         
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
-        system.assert(tourists[1].IsDuplicate__c);
+        
+        System.assert(tourists[1].IsDuplicate__c);
     }
     
     @IsTest
@@ -42,12 +44,13 @@ public class TouristTriggerUnitTest {
         tourists[0].Active__c = false;
         
         Test.startTest();
-        Database.SaveResult result = Database.update(tourists[0], false);
+            Database.SaveResult result = Database.update(tourists[0], false);
         
-        System.assert(result.isSuccess());
+            System.assert(result.isSuccess());
         Test.stopTest();
         
         List<Flight__c> flights = UnitTestFactory.getFlights();
+
         System.assertEquals('Declined', flights[0].Status__c);
     }
 }

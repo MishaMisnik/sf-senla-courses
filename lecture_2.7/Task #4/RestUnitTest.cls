@@ -55,9 +55,18 @@ public class RestUnitTest {
         RestContext.response = response;
         
         Test.startTest();        
-            Tourist__c tourists = TouristRestService.createTourist('Dima', 'Kozlov', 'dima@salesforce.com', '01/01/2000');
+            TouristRestService.createTourist('Dima', 'Kozlov', 'dima@salesforce.com', '01/01/2000');
         Test.stopTest();
         
-        System.assertEquals('Dima', tourists.Name);
+        List<Tourist__c> tourists = [
+            SELECT Id, 
+             	   Name
+            FROM Tourist__c
+            WHERE Name = 'Dima'
+        ];
+        
+        System.assertEquals(1, tourists.size());
+    
+        System.assertEquals('Dima', tourists[0].Name);
     }
 }
