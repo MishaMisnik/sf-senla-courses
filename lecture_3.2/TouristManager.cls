@@ -113,8 +113,8 @@ public class TouristManager {
         return [
             SELECT Upcoming_Flight_Count__c, 
                    Age__c
-			FROM Tourist__c
-			WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
+	    FROM Tourist__c
+	    WHERE (Age__c > :tripMinimalAge AND Upcoming_Flight_Count__c = 0)
         ];
     }
     
@@ -132,7 +132,7 @@ public class TouristManager {
     public static List<Tourist__c> getTouristByFlight(List<Flight__c> flights) {
         if (flights.isEmpty()) return new List<Tourist__c>();
         
-		Set<Id> touristsId = new Set<Id>();
+	Set<Id> touristsId = new Set<Id>();
         
         for (Flight__c flight : flights) {
             touristsId.add(flight.Tourist__c);
@@ -203,7 +203,7 @@ public class TouristManager {
     }
     
     public static List<Tourist__c> getWithMinimalFlightsCount(String tripId) {
-        if (tripId == '' || tripId == null) return new List<Tourist__c>();
+        if (String.isBlank(tripId)) return new List<Tourist__c>();
         
         return [
             SELECT Name, 
@@ -214,7 +214,6 @@ public class TouristManager {
             WHERE Id IN (SELECT Tourist__c FROM Flight__c WHERE Trip__c != :tripId)
             ORDER BY Upcoming_Flight_Count__c ASC 
             LIMIT 10
-            
         ];
     }
 }
