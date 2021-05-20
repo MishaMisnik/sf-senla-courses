@@ -1,0 +1,40 @@
+<apex:page standardController="Trip__c" extensions="TripInfoController">
+
+    <apex:form id="TripForm">
+        <apex:pageblock >
+            <apex:pageBlockSection >
+                <apex:outputField value="{!Trip__c.Id}"/>
+                <apex:outputField value="{!Trip__c.Name}"/>
+                <apex:outputField value="{!Trip__c.Minimal_Age__c}"/>
+                <apex:outputField value="{!Trip__c.Start_Date__c}"/>
+                <apex:outputField value="{!Trip__c.CreatedDate}"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageblockButtons >
+                <apex:commandButton value="Edit" action="{!edit}"/>
+            </apex:pageblockButtons>
+        </apex:pageblock>
+    </apex:form>
+
+    <apex:relatedList list="Flights__r"/>
+    
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!Trip__c.Flights__r}" var="flight">
+            <apex:column value="{!flight.Tourist__r.Name}"/>
+            <apex:column value="{!flight.Tourist__r.LastName__c}"/>
+            <apex:column value="{!flight.Tourist__r.Age__c}"/>  
+            <apex:column value="{!flight.Tourist__r.Upcoming_Flight_Count__c}"/>          
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!tourists}" var="tour">
+            <apex:column value="{!tour.Name}"/>
+            <apex:column value="{!tour.LastName__c}"/>
+            <apex:column value="{!tour.Age__c}"/>  
+            <apex:column value="{!tour.Upcoming_Flight_Count__c}"/>          
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+</apex:page>
+                                        
