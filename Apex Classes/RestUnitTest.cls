@@ -31,7 +31,7 @@ public class RestUnitTest {
         RestContext.response = response;
       
         Test.startTest();
-        	List<Tourist__c> tour = TouristRestService.getTourists();
+            List<Tourist__c> tour = TouristRestService.getTourists();
         Test.stopTest();
         
         System.assertEquals(1, tour.size());
