@@ -8,10 +8,10 @@ public class TouristService {
     public static void markDuplicates(Set<Id> touristIds) {
         if (touristIds.isEmpty() || touristIds == null) return;
         
-		List<Tourist__c> newTourists = TouristManager.getListById(touristIds);
+        List<Tourist__c> newTourists = TouristManager.getListById(touristIds);
         List<Tourist__c> similarTourists = TouristManager.getByLastNameAndEmail(newTourists);
         List<Tourist__c> touristsToUpdate = new List<Tourist__c> ();
-
+        
         for (Tourist__c tourist : newTourists) {
             Boolean isDuplicate = false;
             
@@ -22,9 +22,9 @@ public class TouristService {
                 } 
             }  
        
-      	    if (isDuplicate) {
-			    tourist.IsDuplicate__c = true;
-         	    touristsToUpdate.add(tourist);
+            if (isDuplicate) {
+                tourist.IsDuplicate__c = true;
+                touristsToUpdate.add(tourist);
             }
         }
 
@@ -63,7 +63,7 @@ public class TouristService {
     }
     
     public static void createTouristValidation (String name, String lastName, String email, String birthdate) {
- 	    RestRequestValidationException validationException = new RestRequestValidationException();
+        RestRequestValidationException validationException = new RestRequestValidationException();
         String duplicateCheck = lastname + email;
         
         try {

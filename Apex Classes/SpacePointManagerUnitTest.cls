@@ -26,7 +26,7 @@ public class SpacePointManagerUnitTest {
         
         System.assertEquals(3, spacePointsById.size());
         System.assertEquals(spacePoints[0].Id, spacePointsById.get(spacePoints[0].Id).Id);
-
+        
         spacePointsById = SpacePointManager.getById(new Set<Id>());
         
         System.assertEquals(0, spacePointsById.size());

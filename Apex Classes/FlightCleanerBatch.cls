@@ -1,5 +1,5 @@
 public class FlightCleanerBatch implements Database.Batchable<SObject>, Database.Stateful, Database.RaisesPlatformEvents {
-	private String status = '\'Declined\'';
+    private String status = '\'Declined\'';
     //Days_After_Create__c - formula field: TODAY() - DATEVALUE( CreatedDate )
     private String query = 'SELECT Id, Tourist__c FROM Flight__c WHERE Status__c = ' + status + ' AND Days_After_Create__c > 30';
     private Map<Id, Integer> countDeleteFlightsForTouristId = new Map<Id, Integer>();
@@ -13,9 +13,9 @@ public class FlightCleanerBatch implements Database.Batchable<SObject>, Database
     }
     
     public void finish(Database.BatchableContext bc) {
-		Map<Tourist__c, Integer> result = FlightCleanerBatchService.convertMaps(countDeleteFlightsForTouristId);
+        Map<Tourist__c, Integer> result = FlightCleanerBatchService.convertMaps(countDeleteFlightsForTouristId);
         List<String> emails = MetadataManager.getAllMetadataEmails();
-
+        
         FlightCleanerBatchService.sendEmails(emails, result);
     }
 }

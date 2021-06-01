@@ -9,7 +9,7 @@ public class AsynUnitTest {
             Birthdate__c = Date.newInstance(1997, 05, 05)
         );
         insert tourist;
-
+        
         Trip__c trip = new Trip__c(
             Name = 'To Mars', 
             Minimal_Age__c = 7, 
@@ -27,7 +27,7 @@ public class AsynUnitTest {
     
     @IsTest
     public static void testMarkDuplicates() {        
-		Tourist__c tourist = new Tourist__c (
+        Tourist__c tourist = new Tourist__c (
             Name = 'Dima',
             LastName__c = 'Misnik', 
             Email__c = 'misnik@salesforce.com', 
@@ -35,9 +35,9 @@ public class AsynUnitTest {
         );
         
         Test.startTest();
-        	Database.SaveResult result = Database.insert(tourist, false);
+            Database.SaveResult result = Database.insert(tourist, false);
         
-        	System.assert(result.isSuccess());
+            System.assert(result.isSuccess());
         Test.stopTest();
         
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
@@ -53,8 +53,8 @@ public class AsynUnitTest {
         Test.setCreatedDate(flights[0].Id, dt);
         
         Test.startTest();
-        	FlightCleanerBatch flightBatch = new FlightCleanerBatch();
-			Database.executebatch(flightBatch);
+            FlightCleanerBatch flightBatch = new FlightCleanerBatch();
+            Database.executebatch(flightBatch);
         Test.stopTest();
         
         flights = UnitTestFactory.getFlights();
@@ -64,25 +64,25 @@ public class AsynUnitTest {
     
     @IsTest
     public static void testFlightWorkSchedule() {
-		List<Flight__c> flights = UnitTestFactory.getFlights();
+        List<Flight__c> flights = UnitTestFactory.getFlights();
         
         Datetime dt = Datetime.now().addDays(-31);
         Test.setCreatedDate(flights[0].Id, dt);
         
         Test.startTest();
-        	String cron = '0 0 0 15 3 ? 2022';
-        	FlightWorkSchedule fws = new FlightWorkSchedule();
+            String cron = '0 0 0 15 3 ? 2022';
+            FlightWorkSchedule fws = new FlightWorkSchedule();
             String jobId = System.schedule('Flight Cleaner Schedule',cron ,fws);
         Test.stopTest();
         
         List<AsyncApexJob> jobsScheduled = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'ScheduledApex'];
         
-    	System.assertEquals(1, jobsScheduled.size(), 'expecting one scheduled job');
-    	System.assertEquals('FlightWorkSchedule', jobsScheduled[0].ApexClass.Name, 'expecting specific scheduled job');
-
-    	List<AsyncApexJob> jobsApexBatch = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'BatchApex'];
+        System.assertEquals(1, jobsScheduled.size(), 'expecting one scheduled job');
+        System.assertEquals('FlightWorkSchedule', jobsScheduled[0].ApexClass.Name, 'expecting specific scheduled job');
         
-    	System.assertEquals(1, jobsApexBatch.size(), 'expecting one apex batch job');
-    	System.assertEquals('FlightCleanerBatch', jobsApexBatch[0].ApexClass.Name, 'expecting specific batch job');
+        List<AsyncApexJob> jobsApexBatch = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'BatchApex'];
+        
+        System.assertEquals(1, jobsApexBatch.size(), 'expecting one apex batch job');
+        System.assertEquals('FlightCleanerBatch', jobsApexBatch[0].ApexClass.Name, 'expecting specific batch job');
     }
 }

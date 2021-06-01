@@ -19,7 +19,7 @@ private class FlightTriggerUnitTest {
     static void testOnBeforeInsert() {
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
         List<Trip__c> trips = UnitTestFactory.getTrips();
-		List<Flight__c> flights = new List<Flight__c>{
+        List<Flight__c> flights = new List<Flight__c>{
             new Flight__c (Tourist__c = tourists[0].Id, Trip__c = trips[0].Id),
             new Flight__c (Tourist__c = tourists[0].Id, Trip__c = trips[1].Id),
             new Flight__c (Tourist__c = tourists[0].Id, Trip__c = trips[2].Id)
@@ -27,12 +27,12 @@ private class FlightTriggerUnitTest {
         
         Test.startTest();  
             Database.SaveResult[] result = Database.insert(flights, false);
-		
+            
             System.assert(result[0].isSuccess());
-
+            
             System.assert(!result[1].isSuccess());
             System.assertEquals(FlightTriggerHandler.ERROR_DEPARTURE_FLIGHT, result[1].getErrors()[0].message); 
-
+            
             System.assert(!result[2].isSuccess());
             System.assertEquals(FlightTriggerHandler.ERROR_INSUFFICIENT_MINIMAL_AGE, result[2].getErrors()[0].message);
         Test.stopTest();

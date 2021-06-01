@@ -32,7 +32,7 @@ public class TouristTriggerUnitTest {
     
     @IsTest
     static void testAfterInsert() {
-		Tourist__c tourist = new Tourist__c (
+        Tourist__c tourist = new Tourist__c (
             Name = 'Dima',
             LastName__c = 'Misnik', 
             Email__c = 'misnik@salesforce.com', 
@@ -56,10 +56,10 @@ public class TouristTriggerUnitTest {
     static void testAfterUpdate() {
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
         tourists[0].Active__c = false;
-
+        
         Test.startTest();
             Database.SaveResult result = Database.update(tourists[0], false);
-
+            
        	    System.assert(result.isSuccess());
         Test.stopTest();
         

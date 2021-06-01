@@ -16,7 +16,7 @@ public class WeatherManagerUnitTest {
         
         System.assertEquals(1, weatherWithOldDate.size());
         System.assertEquals(weather[0].Id, weatherWithOldDate[0].Id);
-    } 
+    }
     
     @IsTest
     public static void testGetBySpacePoint() {
@@ -25,7 +25,7 @@ public class WeatherManagerUnitTest {
         
         System.assertEquals(1, weatherBySpacePoint.size());
         System.assertEquals(weather[0].Id, weatherBySpacePoint.get(weather[0].Date__c).Id);
-
+        
         weatherBySpacePoint = WeatherManager.getBySpacePoint(null);
         
         System.assertEquals(0, weatherBySpacePoint.size());

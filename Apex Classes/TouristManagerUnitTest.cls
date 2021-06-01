@@ -28,7 +28,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsByName.size());
         System.assertEquals(tourists[1].Name, touristsByName[0].Name);
-
+        
         touristsByName = TouristManager.getByName(null);
         
         System.assertEquals(0, touristsByName.size());
@@ -41,7 +41,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(4, touristsById.size());
         System.assertEquals(tourists[0].Id, touristsById.get(tourists[0].Id).Id);
-
+        
         touristsById = TouristManager.getById(new Set<Id>());
         
         System.assertEquals(0, touristsById.size());
@@ -54,7 +54,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(4, touristsListById.size());
         System.assertEquals(tourists[0].Id, touristsListById[0].Id);     
-
+        
         touristsListById = TouristManager.getListById(new Set<Id>());
         
         System.assertEquals(0, touristsListById.size());
@@ -72,7 +72,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsByLastNameAndEmail.size());
         System.assertEquals(tourists[0].Duplicate_Check__c, touristsByLastNameAndEmail[0].Duplicate_Check__c);
-
+        
         touristsByLastNameAndEmail = TouristManager.getByLastNameAndEmail(new List<Tourist__c>());
         
         System.assertEquals(0, touristsByLastNameAndEmail.size());
@@ -90,7 +90,7 @@ private class TouristManagerUnitTest {
             
         System.assertEquals(4, touristsByAge.size());
         System.assertEquals(tourists[0].Id, touristsByAge[0].Id);
-
+        
         touristsByAge = TouristManager.getByAge(new Set<Integer>());
         
         System.assertEquals(0, touristsByAge.size());
@@ -104,7 +104,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsByDateStart.size());
         System.assertEquals(tourist[1].Id, touristsByDateStart[0].Id);
-
+        
         touristsByDateStart = TouristManager.getByDateStart(null);
         
         System.assertEquals(0, touristsByDateStart.size());
@@ -126,7 +126,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(3, touristsWithoutFlightsAndAppropriateAge.size());
         System.assertEquals(tourist[0].Id, touristsWithoutFlightsAndAppropriateAge[0].Id);
-
+        
         touristsWithoutFlightsAndAppropriateAge = TouristManager.getWithoutFlightsAndAppropriateAge(new List<Trip__c>());
         
         System.assertEquals(0, touristsWithoutFlightsAndAppropriateAge.size());
@@ -148,7 +148,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsTouristByFlight.size());
         System.assertEquals(tourist[1].Id, touristsTouristByFlight[0].Id);
-
+        
         touristsTouristByFlight = TouristManager.getTouristByFlight(new List<Flight__c>());
         
         System.assertEquals(0, touristsTouristByFlight.size());
@@ -163,7 +163,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsByDuplicateCheck.size());
         System.assertEquals(duplicateCheck, touristsByDuplicateCheck[0].Duplicate_Check__c);
- 		
+        
         touristsByDuplicateCheck = TouristManager.getByDuplicateCheck(null);
         
         System.assertEquals(0, touristsByDuplicateCheck.size());
@@ -176,7 +176,7 @@ private class TouristManagerUnitTest {
         
         System.assertEquals(1, touristsByRelationshipWithFlight.size());
         System.assertEquals(tourist[1].Id, touristsByRelationshipWithFlight[0].Id);
-
+        
         touristsByRelationshipWithFlight = TouristManager.getByRelationshipWithFlight(new Set<Id>());
         
         System.assertEquals(0, touristsByRelationshipWithFlight.size());
@@ -193,17 +193,17 @@ private class TouristManagerUnitTest {
             touristsId.add(tourist.Id);
         }
         Test.setFixedSearchResults(touristsId);
-		
+        
         List<Tourist__c> touristsByNameAndAge = TouristManager.getByNameAndAge(name, age);
-
+        
         System.assertEquals(2, touristsByNameAndAge.size());
-		
+        
         touristsByNameAndAge = TouristManager.getByNameAndAge(name, null);
-
+        
         System.assertEquals(4, touristsByNameAndAge.size());
-
+        
         touristsByNameAndAge = TouristManager.getByNameAndAge(null, null);
-
+        
         System.assertEquals(0, touristsByNameAndAge.size());
     }
 }

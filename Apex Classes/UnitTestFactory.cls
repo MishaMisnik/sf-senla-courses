@@ -3,7 +3,7 @@ public class UnitTestFactory {
     
     public static Set<Id> getIds (List<SObject> obj) {
         if (obj.isEmpty() || obj == null) return new Set<Id>();
-
+        
         Set<Id> ids = new Set<Id>();
         
         for (SObject ob : obj) {
@@ -81,20 +81,20 @@ public class UnitTestFactory {
                 Birthdate__c = birthdate
         );
     }
-
+    
     public static Trip__c createTrip(String name, Integer minAge, Date startDate) {
         if (String.isBlank(name) || minAge == null || startDate == null) return new Trip__c();
-
+        
         return new Trip__c(
                 Name = name,
                 Minimal_Age__c = minAge,
                 Start_Date__c = startDate
         );
     }
-
+    
     public static Flight__c createFlight(Tourist__c tourist, Trip__c trip) {
         if (tourist == null || trip == null) return new Flight__c();
-
+        
         return new Flight__c(
                 Tourist__c = tourist.Id,
                 Trip__c = trip.Id

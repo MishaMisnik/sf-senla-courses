@@ -2,11 +2,11 @@ public class TripManager {
     
     public static Map<Id, Trip__c> getByIds(Set<Id> tripIds) {
         if (tripIds.isEmpty() || tripIds == null) return new Map<Id, Trip__c>();
-
+        
         return new Map<Id, Trip__c>([
             SELECT Id,
-            	   Minimal_Age__c,
-            	   Start_Date__c
+                   Minimal_Age__c,
+                   Start_Date__c
             FROM Trip__c
             WHERE Id IN :tripIds
         ]);
@@ -17,9 +17,9 @@ public class TripManager {
         
         return [
             SELECT Id,
-            	   Minimal_Age__c,
-            	   Start_Date__c,
-            	   (SELECT Status__c, 
+                   Minimal_Age__c,
+                   Start_Date__c,
+                   (SELECT Status__c, 
                            Tourist__c, 
                            Tourist__r.Upcoming_Flight_Count__c, 
                            Tourist__r.Name, 

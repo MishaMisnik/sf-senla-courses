@@ -22,7 +22,7 @@ global class TouristRestService {
             response.responseBody = Blob.valueOf(Constants.INTERNAL_ERROR);
             response.statusCode = Constants.INTERNAL_ERROR_500; 
         }
-		
+        
         return tourits;
     }
     
@@ -49,7 +49,7 @@ global class TouristRestService {
             response.responseBody = Blob.valueOf(Constants.INTERNAL_ERROR);
             response.statusCode = Constants.INTERNAL_ERROR_500; 
         }
-
+        
         return tourist;
     }
 }

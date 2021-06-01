@@ -1,5 +1,5 @@
 public class WeatherManager {
-	
+    
     public static List<Weather_Daily_Forecast__c> getWithOldDate () {
         
         return [
@@ -19,7 +19,7 @@ public class WeatherManager {
             SELECT Id,
                    Space_Point__c,
                    Date__c,
-            	   Average_Temperature__c
+                   Average_Temperature__c
             FROM Weather_Daily_Forecast__c
             WHERE Space_Point__c = :spacePointId
         ];

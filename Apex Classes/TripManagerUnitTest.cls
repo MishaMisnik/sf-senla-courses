@@ -16,7 +16,7 @@ public class TripManagerUnitTest {
         
         System.assertEquals(2, tripsById.size());
         System.assertEquals(trips[0].Id, tripsById.get(trips[0].Id).Id);
-
+        
         tripsById = TripManager.getByIds(new Set<Id>());
         
         System.assertEquals(0, tripsById.size());

@@ -39,14 +39,14 @@ public with sharing class WeatherForecastService {
         for (Id spacePoint : allSpacePoints.keySet()) {
             Decimal latitude = allSpacePoints.get(spacePoint).Latitude__c;
             Decimal longitude = allSpacePoints.get(spacePoint).Longitude__c;
-			
+            
             Http http = new Http();
             HttpRequest request = createrRequest(latitude, longitude);
             HttpResponse response = http.send(request);
             
             Map<Date, Decimal> weatherForSpacePoint = getForecasts(response);
             Map<Date, Weather_Daily_Forecast__c> weather = WeatherManager.getBySpacePoint(spacePoint);
-    
+            
             for (Integer i = 0; i < NUMBER_DAYS_TO_UPSERT; i++) {
                 Date desiredDate = date.today().addDays(i);
                 

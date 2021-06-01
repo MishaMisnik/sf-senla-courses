@@ -1,5 +1,5 @@
 public class FlightCleanerBatchService {
-	
+    
     public static Map<Tourist__c, Integer> convertMaps (Map<Id, Integer> countDeleteFlights) {
         if (countDeleteFlights.isEmpty() || countDeleteFlights == null) return new Map<Tourist__c, Integer>();
         
@@ -8,7 +8,7 @@ public class FlightCleanerBatchService {
         
         for (Tourist__c tourist : tourists) {
             result.put(tourist, countDeleteFlights.get(tourist.id));
-	    }
+        }
         
         return result;
     }
@@ -18,7 +18,7 @@ public class FlightCleanerBatchService {
         
         Map<Id, Flight__c> flightsById = new Map<Id, Flight__c> (flights);
         Map<Id, Integer> countDeleteFlightsForTouristId = new Map<Id, Integer> ();        
-		Database.DeleteResult[] deleteFlights = Database.delete(flights, false);
+        Database.DeleteResult[] deleteFlights = Database.delete(flights, false);
         Integer count = 0;
         
         for (Database.DeleteResult remoteFlight : deleteFlights) {
@@ -26,8 +26,8 @@ public class FlightCleanerBatchService {
                 count = 1;
                 
                 if (countDeleteFlightsForTouristId.containsKey(flightsById.get(remoteFlight.getId()).Tourist__c)){
-                	count += countDeleteFlightsForTouristId.get(flightsById.get(remoteFlight.getId()).Tourist__c);
-                	countDeleteFlightsForTouristId.put(flightsById.get(remoteFlight.getId()).Tourist__c, count);
+                    count += countDeleteFlightsForTouristId.get(flightsById.get(remoteFlight.getId()).Tourist__c);
+                    countDeleteFlightsForTouristId.put(flightsById.get(remoteFlight.getId()).Tourist__c, count);
                 } else {
                     countDeleteFlightsForTouristId.put(flightsById.get(remoteFlight.getId()).Tourist__c, count);
                 }
@@ -42,7 +42,7 @@ public class FlightCleanerBatchService {
         
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         
-		message.toAddresses = emails;
+        message.toAddresses = emails;
         message.subject = 'HW';
         message.plainTextBody = 'Список туристов: ';
         

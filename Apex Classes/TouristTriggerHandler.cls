@@ -1,5 +1,5 @@
 public class TouristTriggerHandler{
-	public static Boolean onAfterInsertIsFirstTime = true;
+    public static Boolean onAfterInsertIsFirstTime = true;
     public static Boolean onAfterUpdateIsFirstTime = true;
     
     public static void onAfterInsert (List<Tourist__c> newTourists) {
@@ -8,7 +8,7 @@ public class TouristTriggerHandler{
         Set<Id> touristsIds = TouristManager.getIds(newTourists);
         TouristService.markDuplicates(touristsIds);
     }
-
+    
     public static void onAfterUpdate (Map<Id, Tourist__c> newTourists, Map<Id, Tourist__c> oldTourists) {
         if (newTourists.isEmpty() || oldTourists.isEmpty()) return;
         
@@ -27,12 +27,12 @@ public class TouristTriggerHandler{
         
         List<Flight__c> flightsWithoutActTour = FlightManager.getByStartDateAndTouristId(tourists); 
         List<Flight__c> flightsToUpdate = new List<Flight__c> ();
-
+        
         for (Flight__c flight : flightsWithoutActTour) {
             flight.Status__c = 'Declined';
             flightsToUpdate.add(flight);
         }
-
+        
         update flightsToUpdate;
     }
 }

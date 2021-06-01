@@ -1,5 +1,5 @@
 public class NumberUtility {
-	
+    
     public static List<Integer> getPrimeNumbers(Integer endNumber) {
         if (endNumber <= 0 ) return new List<Integer> ();
         
