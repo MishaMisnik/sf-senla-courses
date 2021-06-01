@@ -40,11 +40,9 @@ public class TouristTriggerUnitTest {
         );
         
         Test.startTest();
-        
             Database.SaveResult result = Database.insert(tourist, false);
         
             System.assert(result.isSuccess());
-        
         Test.stopTest();
         
         List<Tourist__c> tourists = UnitTestFactory.getTourists();
