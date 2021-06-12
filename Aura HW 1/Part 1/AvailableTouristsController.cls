@@ -31,7 +31,7 @@ public class AvailableTouristsController {
     
     @AuraEnabled
     public static Integer getCountSeats(String tripId) {
-		if (String.isBlank(tripId)) return 0;
+	if (String.isBlank(tripId)) return 0;
         
         Trip__c trip = getTrip(tripId);
         
@@ -46,7 +46,7 @@ public class AvailableTouristsController {
     
     @AuraEnabled
     public static Boolean createFlgihts(List<Tourist__c> tourists, Trip__c trip) {
-		if (tourists.isEmpty() ||  tourists == null) return true;
+	if (tourists.isEmpty() ||  tourists == null) return true;
         
         Boolean isComplete = true;
         List<Flight__c> flights = new List<Flight__c>();
