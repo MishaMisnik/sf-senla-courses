@@ -36,7 +36,7 @@
             if (cmp.get('v.tourists').length >= cmp.get('v.totalNumberOfRows')) {
                 cmp.set('v.enableInfiniteLoading', false);
             } else {
-                let data = cmp.get('v.data');
+                let data = cmp.get('v.tourists');
                 cmp.set('v.tourists', data.concat(result));
             }
             cmp.set('v.showSpinner', false);
