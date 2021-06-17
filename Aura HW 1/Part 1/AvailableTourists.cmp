@@ -1,87 +1,90 @@
-<aura:component controller="AvailableTouristsController" implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction" access="global">
+<aura:component controller='AvailableTouristsController' implements='flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction' access='global'>
     
     <aura:attribute name='columns' type='List' default='[]'/>
-    <aura:attribute name='data' type='List' default='[]'/>
-    <aura:attribute name='dataTableSchema' type='Object'/>
+    <aura:attribute name='tourists' type='List' default='[]'/>
     <aura:attribute name='keyField' type='String' default='id'/>
     <aura:attribute name='initialRows' type='Integer' default='10'/>
     <aura:attribute name='selectedRowsCount' type='Integer' default='0'/>
     <aura:attribute name='enableInfiniteLoading' type='Boolean' default='true'/>
-    <aura:attribute name="rowsToLoad" type="Integer" default="5"/>
+    <aura:attribute name='rowsToLoad' type='Integer' default='5'/>
     <aura:attribute name='loadMoreOffset' type='Integer' default='0'/>
     <aura:attribute name='totalNumberOfRows' type='Integer' default='300'/>
-    <aura:attribute name="loadMoreStatus" type="String" default=""/>
+    <aura:attribute name='loadMoreStatus' type='String' default=''/>
     
     <aura:attribute name='recordId' type='String'/>
     <aura:attribute name='tripRecord' type='Trip__c'/>
-    <aura:attribute name='countRemaining' type='Integer' default="0"/>
-    <aura:attribute name="startDate" type="Date"/>
     <aura:attribute name='validation' type='Boolean' default='false'/>
     <aura:attribute name='isActive' type='Boolean' default='true'/>
-    <aura:attribute name='spinner' type='Boolean' default='false'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false'/>
     
-    <aura:method name="reInit" action="{!c.init}"/>
+    <force:recordData aura:id='recordLoader'
+                      recordId='{!v.recordId}'
+                      fields='Id, Name, Minimal_Age__c, Remaining_Seats__c, Start_Date__c'
+                      targetFields='{!v.tripRecord}'
+                      recordUpdated='{!c.dataLoader}'/>
     
-    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
-    
-    <aura:if isTrue="{!v.isActive}">
-        <lightning:card variant="Narrow" title="Available Tourists" iconName="standard:account" class="slds-p-around_medium">
-            <aura:if isTrue="{!v.spinner}">
-                <div class="exampleHolder">
-                    <lightning:spinner alternativeText="Loading" size="medium" />
-                </div>  
-            </aura:if>
+    <lightning:card variant='Narrow' title='Available Tourists' iconName='standard:account' class='slds-p-around_medium'>
+        <aura:if isTrue='{!v.showSpinner}'>
+            <div class='exampleHolder'>
+                <lightning:spinner alternativeText='Loading' size='medium' />
+            </div>  
+        </aura:if> 
+        
+        <aura:if isTrue='{!v.isActive}'>
+            <div style='height: 300px'>
+                <lightning:datatable
+                                     aura:id='touristsData'                
+                                     columns='{! v.columns }'
+                                     data='{! v.tourists }'
+                                     keyField='{! v.keyField }'
+                                     showRowNumberColumn='true'
+                                     onrowselection='{! c.updateSelectedText }'
+                                     enableInfiniteLoading='{! v.enableInfiniteLoading }'
+                                     loadMoreOffset='{! v.loadMoreOffset }'
+                                     onloadmore='{! c.loadMoreTourists }'
+                                     />
+            </div>
             
-        <div style="height: 300px">
-            <lightning:datatable
-                aura:id="touristsData"                
-                columns="{! v.columns }"
-                data="{! v.data }"
-                keyField="{! v.keyField }"
-                showRowNumberColumn="true"
-                onrowselection="{! c.updateSelectedText }"
-                enableInfiniteLoading="{! v.enableInfiniteLoading }"
-                loadMoreOffset="{! v.loadMoreOffset }"
-                onloadmore="{! c.loadMoreData }"
-                />
-        </div>
-        
-        
-        <div>
-            Remaining seats: {!v.countRemaining}
-        </div>
-        <lightning:button variant="brand" label="Add to Trip" title="Brand action" onclick="{! c.onClick }" class="slds-m-top_medium"/>    
-        
-        </lightning:card>
-    </aura:if>
-    
-    <aura:if isTrue="{!v.validation}">
-    	<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                <div class="slds-modal__container">
-                    <header class="slds-modal__header">
-                        <lightning:buttonIcon iconName="utility:close"
-                                              onclick="{! c.closeModel }"
-                                              alternativeText="close"
-                                              variant="bare-inverse"
-                                              class="slds-modal__close"/>
-                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Validation</h2>
-                    </header>
-                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                        <p><b>Selected Tourists will be assigned to the Trip. Are you sure?
-                            </b>
-                        </p>
-                    </div>
-                    <footer class="slds-modal__footer">
-                        <lightning:button variant="neutral"
-                                          label="Cancel"
-                                          title="Cancel"
-                                          onclick="{! c.closeOnClick }"/>
-                        <lightning:button variant="brand"
-                                          label="Yes"
-                                          title="Yes"
-                                          onclick="{!c.yesOnClick}"/>
-                    </footer>
+            <lightning:button aura:id='createButton' variant='brand' label='Add to Trip' title='Brand action' onclick='{! c.onClick }' class='slds-m-top_medium'/>    
+            
+            <aura:set attribute='else'>
+                
+                <div class='slds-align_absolute-center' style='height:5rem'>
+                    This trip has already been completed
                 </div>
-            </section>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+    
+    
+    <aura:if isTrue='{!v.validation}'>
+        <section role='dialog' tabindex='-1' aria-labelledby='modal-heading-01' aria-modal='true' aria-describedby='modal-content-id-1' class='slds-modal slds-fade-in-open'>
+            <div class='slds-modal__container'>
+                <header class='slds-modal__header'>
+                    <lightning:buttonIcon iconName='utility:close'
+                                          onclick='{! c.closeModel }'
+                                          alternativeText='close'
+                                          variant='bare-inverse'
+                                          class='slds-modal__close'/>
+                    <h2 id='modal-heading-01' class='slds-text-heading_medium slds-hyphenate'>Validation</h2>
+                </header>
+                <div class='slds-modal__content slds-p-around_medium' id='modal-content-id-1'>
+                    <p>
+                        <b class='slds-align_absolute-center'>Selected Tourists will be assigned to the Trip. Are you sure?
+                        </b>
+                    </p>
+                </div>
+                <footer class='slds-modal__footer'>
+                    <lightning:button variant='neutral'
+                                      label='Cancel'
+                                      title='Cancel'
+                                      onclick='{! c.closeOnClick }'/>
+                    <lightning:button variant='brand'
+                                      label='Yes'
+                                      title='Yes'
+                                      onclick='{!c.yesOnClick}'/>
+                </footer>
+            </div>
+        </section>
     </aura:if>
 </aura:component>
