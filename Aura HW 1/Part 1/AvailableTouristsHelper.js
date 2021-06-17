@@ -10,40 +10,15 @@
         return columns;
     },
     
-    getTrip : function(cmp) {
-        let result = new Promise($A.getCallback( function (resolve, reject) {
-            const trip = cmp.get('c.getTrip');
-            trip.setParams({
-                'tripId' : cmp.get('v.recordId')
-            });
-            
-            trip.setCallback(this, function (res) {
-                const state = res.getState();
-                const value = res.getReturnValue();
-                
-                if (state === 'SUCCESS') {
-                    resolve(value);
-                }
-                if (state == 'ERROR') {
-                    console.log('ERROR', res.getError());
-                    reject(res.getError());
-                }
-            });
-            
-            $A.enqueueAction(trip);
-        }));
-        
-        return result;
-    },
-    
-    getData : function(cmp, offset) {
+    getTourists : function(cmp, offset) {
         let result = new Promise($A.getCallback( function (resolve, reject) {
             const tourists = cmp.get('c.getTourists');
+            
             tourists.setParams({
                 'limits' : cmp.get('v.initialRows'),
                 'offset' : offset,
                 'minAge' : cmp.get('v.tripRecord.Minimal_Age__c'),
-                'tripId' : cmp.get('v.recordId')
+                'trip' : cmp.get('v.tripRecord')
             });
             
             tourists.setCallback(this, function(res) {
@@ -73,9 +48,10 @@
             const newTourists = cmp.get('c.getTourists');
             
             newTourists.setParams({
-                'limits': cmp.get('v.rowsToLoad'),
-                'offset': offset,
-                'minAge' : cmp.get('v.tripRecord.Minimal_Age__c')
+                'limits' : cmp.get('v.initialRows'),
+                'offset' : offset,
+                'minAge' : cmp.get('v.tripRecord.Minimal_Age__c'),
+                'trip' : cmp.get('v.tripRecord')
             });
             
             newTourists.setCallback(this, function(res) {
@@ -83,6 +59,10 @@
                 const value = res.getReturnValue();
                 
                 if (state == 'SUCCESS') {
+                    value.forEach(function(value) {
+                        value.Name = value.Name + ' ' + value.LastName__c;
+                        value.linkName = '/' + value.Id;
+                    });
                     resolve(value); 
                 }
                 if (state == 'ERROR') {
@@ -96,35 +76,8 @@
         return result;
     },
     
-    getCountSeats : function(cmp) {
-        let result = new Promise($A.getCallback( function (resolve, reject) {
-            const countSeats = cmp.get('c.getCountSeats');
-            
-            countSeats.setParams({
-                'tripId' : cmp.get('v.recordId')
-            });
-            
-            countSeats.setCallback(this, function(res) {
-                const state = res.getState();
-                const value = res.getReturnValue();
-                
-                if (state == 'SUCCESS') {
-                    resolve(value); 
-                }
-                if (state == 'ERROR') {
-                    console.log('ERROR', res.getError());
-                    reject(res.getError());
-                }
-            });
-            
-            $A.enqueueAction(countSeats);
-        }));
-        
-        return result;
-    },
-    
     showToast : function(type, mes) {
-        let toastEvent = $A.get("e.force:showToast");
+        let toastEvent = $A.get('e.force:showToast');
         toastEvent.setParams({
             title: type,
             type: type,
