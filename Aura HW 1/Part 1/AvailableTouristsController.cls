@@ -16,7 +16,7 @@ public class AvailableTouristsController {
 
     @AuraEnabled
     public static Boolean createFlgihts(List<Tourist__c> tourists, Trip__c trip) {
-		if (tourists.isEmpty() ||  tourists == null) return true;
+		if (tourists.isEmpty() ||  tourists == null) return false;
         
         Boolean isComplete = true;
         List<Flight__c> flights = new List<Flight__c>();
