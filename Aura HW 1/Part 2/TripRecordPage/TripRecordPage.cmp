@@ -1,0 +1,55 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global' >
+    <aura:attribute name='selectedTripId' type='String' access='public'/>
+    <aura:attribute name='isTripSelected' type='Boolean' default='false' access='public'/>
+	    
+    <aura:if isTrue='{!v.isTripSelected}'>
+        <fieldset class='slds-form-element slds-form-element_compound'>
+            <lightning:recordViewForm aura:id='recordForm' 
+                                      recordId='{!v.selectedTripId}' 
+                                      objectApiName='Trip__c'>
+                
+                <div class='slds-form-element__row slds-p-top_small'>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='Name' />
+                        </div>
+                    </div>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='Remaining_Seats__c' />
+                        </div>
+                    </div>   
+                </div>
+                <div class='slds-form-element__row'>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='Minimal_Age__c' />
+                        </div>
+                    </div>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='Seats__c' />
+                        </div>
+                    </div>
+                </div>
+                <div class='slds-form-element__row'>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='Start_Date__c' />
+                        </div>
+                    </div>
+                    <div class='slds-size_1-of-2 slds-p-right_xx-large'>
+                        <div class='slds-form-element slds-form-element_readonly'>
+                            <lightning:outputField fieldName='End_Date__c' />
+                        </div>
+                    </div>
+                </div>            
+            </lightning:recordViewForm>
+        </fieldset>
+        <aura:set attribute="else">
+            <div class="slds-align_absolute-center">
+                Trip is not selected
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

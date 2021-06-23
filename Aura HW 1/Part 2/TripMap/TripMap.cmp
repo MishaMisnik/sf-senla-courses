@@ -1,0 +1,17 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global'>
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+    <aura:attribute name='isTripSelected' type='Boolean' default='false'/>
+    
+    <lightning:card variant='Narrow' class='slds-p-around_medium'>
+        <aura:if isTrue='{!v.isTripSelected}'>
+            <lightning:map mapMarkers="{! v.mapMarkers }" 
+                           zoomLevel="{! v.zoomLevel }" />
+            <aura:set attribute="else">
+                <div class="slds-align_absolute-center">
+                    Trip is not selected
+                </div>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,23 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global'>
+    
+    <aura:attribute name='tripName' type='List'/>
+    <aura:attribute name='isTripSelected' type='Boolean' default='false'/>
+    
+    <aura:if isTrue='{!v.isTripSelected}'>
+        <fieldset class='slds-form-element slds-form-element_compound'>
+            <div class='slds-form-element__control'>
+                <div class='slds-form-element__row'>
+                    <aura:iteration items="{!v.tripName}" var="item">
+                        <div class='slds-size_1-of-5'>
+                            <div class='slds-form-element'>
+                                <div class='slds-form-element__control'>
+                                    <lightning:carouselImage src="{!item}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </fieldset>
+    </aura:if>
+</aura:component>
