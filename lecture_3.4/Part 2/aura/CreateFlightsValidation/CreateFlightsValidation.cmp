@@ -1,0 +1,40 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global'>
+    <aura:attribute name='showValidation' type='Boolean' default='false' access='public'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='public'/>
+    
+    <aura:registerEvent name='createValidation' type='c:CreateFlights'/>
+    
+	<section role='dialog' tabindex='-1' aria-labelledby='modal-heading-01' aria-modal='true' aria-describedby='modal-content-id-1' class='slds-modal slds-fade-in-open'>
+            <div class='slds-modal__container'>
+                <header class='slds-modal__header'>
+                    <lightning:buttonIcon iconName='utility:close'
+                                          onclick='{! c.closeModel }'
+                                          alternativeText='close'
+                                          variant='bare-inverse'
+                                          class='slds-modal__close' />
+                    
+                    <h2 id='modal-heading-01' class='slds-text-heading_medium slds-hyphenate'>
+                        {!format($Label.c.Validation)}
+                    </h2>
+                </header>
+                <div class='slds-modal__content slds-p-around_medium' id='modal-content-id-1'>
+                    <p>
+                        <div class='slds-align_absolute-center slds-text-title_bold'>
+                            {!format($Label.c.TripValidation)}
+                        </div>
+                    </p>
+                </div>
+                <footer class='slds-modal__footer'>
+                    <lightning:button variant='neutral'
+                                      label='Cancel'
+                                      title='Cancel'
+                                      onclick='{! c.onCancel }' />
+                    
+                    <lightning:button variant='brand'
+                                      label='Yes'
+                                      title='Yes'
+                                      onclick='{!c.inSubmit}' />
+                </footer>
+            </div>
+        </section>
+</aura:component>

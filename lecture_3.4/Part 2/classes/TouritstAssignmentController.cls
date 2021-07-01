@@ -1,4 +1,4 @@
-public class TouritstAssignmentController {
+public inherited sharing class TouritstAssignmentController {
     @AuraEnabled(cacheable = true)
     public static List<Trip__c> getTrips(Tourist__c tourist){
         if (tourist == null) return new List<Trip__c>();

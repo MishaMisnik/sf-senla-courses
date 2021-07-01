@@ -1,0 +1,19 @@
+.THIS .title {
+ 	font-size: 16px;
+ 	padding-top: 10px;
+ 	padding-bottom: 10px;
+ 	font-weight: bold;
+ }
+ 
+ .THIS.row {
+ 	padding-left: 10px;
+ }
+ 
+ .THIS .result {
+ 	color: green;
+ }
+ 
+ .THIS p {
+ 	padding-top: 5px;
+ 	padding-bottom: 10px;
+ }

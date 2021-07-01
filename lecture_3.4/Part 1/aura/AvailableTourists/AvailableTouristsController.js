@@ -3,7 +3,7 @@
         cmp.set('v.showSpinner', true);
         cmp.set('v.columns', helper.getColumnDefinitions());
         
-        helper.getTourists(cmp, 0).then(function(result) {
+        helper.loadTouristsByMinAgeAndDate(cmp, 0).then(function(result) {
             cmp.set('v.tourists', result);
             const today = $A.localizationService.formatDate(new Date(), 'YYYY-MM-DD');
             const tripStartDate = cmp.get('v.tripRecord.Start_Date__c');
@@ -13,7 +13,7 @@
                 cmp.set('v.isActive', false);
             }
             
-            if (counRemSeats == 0) {                
+            if (counRemSeats <= 0) {                
                 const button = cmp.find('createButton');
                 button.set('v.variant', 'destructive-text');
                 button.set('v.disabled', 'true');
@@ -32,7 +32,7 @@
         cmp.set('v.showSpinner', true);
         let dataLenght = cmp.get('v.tourists').length;
         
-        helper.getMoreData(cmp, event, dataLenght).then(function(result){
+        helper.loadTouristsByMinAgeAndDate(cmp, dataLenght).then(function(result){
             if (cmp.get('v.tourists').length >= cmp.get('v.totalNumberOfRows')) {
                 cmp.set('v.enableInfiniteLoading', false);
             } else {
@@ -56,34 +56,27 @@
                 helper.showToast($A.get('$Label.c.Error'), $A.get('$Label.c.NothingSelected'));
                 cmp.set('v.showSpinner', false);
             } else {
-                cmp.set('v.validation', true);
+                cmp.set('v.showValidation', true);
                 $A.get('e.force:refreshView').fire();
             }
         }
     },
     
-    yesOnClick : function (cmp, event, helper) {
+    inSubmit : function (cmp, event, helper) {
         helper.createFlights(cmp).then(function(result) {
             if (result) {
                 helper.showToast($A.get('$Label.c.Success'), $A.get('$Label.c.CreateComplete'));
-                cmp.set('v.validation', false);
+                cmp.set('v.showValidation', false);
                 
                 const reInit = cmp.get('c.dataLoader');
-                cmp.set('v.showSpinner', false);
                 $A.enqueueAction(reInit);
             } else {
-                cohelper.showToast($A.get('$Label.c.Error'), $A.get('$Label.c.CreateFlightsError'));
-                cmp.set('v.validation', false);
-                cmp.set('v.showSpinner', false);
+                helper.showToast($A.get('$Label.c.Error'), $A.get('$Label.c.CreateFlightsError'));
+                cmp.set('v.showValidation', false);
             }
             
             cmp.set('v.showSpinner', false);
         	$A.get('e.force:refreshView').fire();
         });
-    },
-    
-    closeOnClick : function (cmp, event, helper) {
-        cmp.set('v.validation', false);
-        cmp.set('v.showSpinner', false);
     }
 });

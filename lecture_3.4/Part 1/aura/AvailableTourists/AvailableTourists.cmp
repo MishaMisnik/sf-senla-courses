@@ -1,0 +1,67 @@
+<aura:component controller='AvailableTouristsController' implements='flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction' access='global'>
+    
+    <aura:attribute name='columns' type='List' default='[]' access='public'/>
+    <aura:attribute name='tourists' type='List' default='[]' access='public'/>
+    <aura:attribute name='keyField' type='String' default='id' access='public'/>
+    <aura:attribute name='initialRows' type='Integer' default='10' access='public'/>
+    <aura:attribute name='selectedRowsCount' type='Integer' default='0' access='public'/>
+    <aura:attribute name='enableInfiniteLoading' type='Boolean' default='true' access='public'/>
+    <aura:attribute name='rowsToLoad' type='Integer' default='5' access='public'/>
+    <aura:attribute name='loadMoreOffset' type='Integer' default='0' access='public'/>
+    <aura:attribute name='totalNumberOfRows' type='Integer' default='300' access='public'/>
+    <aura:attribute name='loadMoreStatus' type='String' default='' access='public'/>
+    
+    <aura:attribute name='recordId' type='String' access='public'/>
+    <aura:attribute name='tripRecord' type='Trip__c' access='public'/>
+    <aura:attribute name='showValidation' type='Boolean' default='false' access='public'/>
+    <aura:attribute name='isActive' type='Boolean' default='true' access='public'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='public'/>
+    
+    <aura:handler name="createValidation" event="c:CreateFlights" action="{!c.inSubmit}"/>
+    
+    <force:recordData aura:id='recordLoader'
+                      recordId='{!v.recordId}'
+                      fields='Id, Name, Minimal_Age__c, Remaining_Seats__c, Start_Date__c'
+                      targetFields='{!v.tripRecord}'
+                      recordUpdated='{!c.dataLoader}' />
+    
+    <lightning:card variant='Narrow' title='Available Tourists' iconName='standard:account' class='slds-p-around_medium'>
+        <aura:if isTrue='{!v.showSpinner}'>
+            <div class='exampleHolder'>
+                <lightning:spinner alternativeText='Loading' size='medium' />
+            </div>  
+        </aura:if>
+        
+        <aura:if isTrue='{!v.isActive}'>
+            <div class='datatableHeight'>
+                <lightning:datatable aura:id='touristsData'                
+                                     columns='{! v.columns }'
+                                     data='{! v.tourists }'
+                                     keyField='{! v.keyField }'
+                                     showRowNumberColumn='true'
+                                     enableInfiniteLoading='{! v.enableInfiniteLoading }'
+                                     loadMoreOffset='{! v.loadMoreOffset }'
+                                     onloadmore='{! c.loadMoreTourists }' />
+            </div>
+            
+            <lightning:button aura:id='createButton' 
+                              variant='brand' 
+                              label='Add to Trip' 
+                              title='Brand action' 
+                              onclick='{! c.onClick }' 
+                              class='slds-m-top_medium' />    
+            
+            <aura:set attribute='else'>
+                
+                <div class='slds-align_absolute-center'>
+                    {!format($Label.c.TripComplete)}
+                </div>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+    
+    <aura:if isTrue='{!v.showValidation}'>
+        <c:CreateFlightsValidation showSpinner='{!v.showSpinner}' 
+                                   showValidation='{!v.showValidation}'/>
+    </aura:if>
+</aura:component>

@@ -10,14 +10,13 @@
         return columns;
     },
     
-    getTourists : function(cmp, offset) {
+    loadTouristsByMinAgeAndDate : function(cmp, offset) {
         let result = new Promise($A.getCallback( function (resolve, reject) {
             const tourists = cmp.get('c.getTourists');
             
             tourists.setParams({
                 'limits' : cmp.get('v.initialRows'),
                 'offset' : offset,
-                'minAge' : cmp.get('v.tripRecord.Minimal_Age__c'),
                 'trip' : cmp.get('v.tripRecord')
             });
             
@@ -43,52 +42,19 @@
         return result;
     },
     
-    getMoreData : function(cmp, event, offset) {
-        let result = new Promise($A.getCallback( function (resolve, reject) {
-            const newTourists = cmp.get('c.getTourists');
-            
-            newTourists.setParams({
-                'limits' : cmp.get('v.initialRows'),
-                'offset' : offset,
-                'minAge' : cmp.get('v.tripRecord.Minimal_Age__c'),
-                'trip' : cmp.get('v.tripRecord')
-            });
-            
-            newTourists.setCallback(this, function(res) {
-                const state = res.getState();
-                const value = res.getReturnValue();
-                
-                if (state == 'SUCCESS') {
-                    value.forEach(function(value) {
-                        value.Name = value.Name + ' ' + value.LastName__c;
-                        value.linkName = '/' + value.Id;
-                    });
-                    resolve(value); 
-                }
-                if (state == 'ERROR') {
-                    console.log('ERROR', res.getError());
-                    reject( res.getError() );
-                }
-            });
-            
-            $A.enqueueAction(newTourists);
-        }));
-        return result;
-    },
-    
-    showToast : function(type, mes) {
+    showToast : function(type, msg) {
         let toastEvent = $A.get('e.force:showToast');
         toastEvent.setParams({
             title: type,
             type: type,
-            message: mes
+            message: msg
         });
         toastEvent.fire();
     },
     
     createFlights : function(cmp) {
         let result = new Promise($A.getCallback( function (resolve, reject) {
-            const createNewFlights = cmp.get('c.createFlgihts');
+            const createNewFlights = cmp.get('c.createFlights');
             
             createNewFlights.setParams({
                 'tourists' : cmp.find('touristsData').getSelectedRows(),
