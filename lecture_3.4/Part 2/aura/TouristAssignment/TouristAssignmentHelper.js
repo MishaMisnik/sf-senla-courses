@@ -1,5 +1,5 @@
 ({
-	getTrips : function(cmp) {
+    getTrips : function(cmp) {
         let result = new Promise($A.getCallback( function (resolve, reject) {
             const trips = cmp.get('c.getTrips');
             
