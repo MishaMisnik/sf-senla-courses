@@ -1,13 +1,13 @@
 ({
 	getTrips : function(cmp) {
         let result = new Promise($A.getCallback( function (resolve, reject) {
-            const trip = cmp.get('c.getTrips');
+            const trips = cmp.get('c.getTrips');
             
-            trip.setParams({
+            trips.setParams({
                 'tourist' : cmp.get('v.tourist')
             });
             
-            trip.setCallback(this, function(res) {
+            trips.setCallback(this, function(res) {
                 const state = res.getState();
                 const value = res.getReturnValue();
                 if (state == 'SUCCESS') {
@@ -19,33 +19,9 @@
                 }
             });
             
-            $A.enqueueAction(trip);    
+            $A.enqueueAction(trips);    
         }));
-        return result;
-    },
-    
-    getTourist : function(cmp) {
-        let result = new Promise($A.getCallback( function (resolve, reject) {
-            const tourist = cmp.get('c.getTourist');
-            
-            tourist.setParams({
-                'touristId' : cmp.get('v.selectedTouristId')
-            });
-            
-            tourist.setCallback(this, function(res) {
-                const state = res.getState();
-                const value = res.getReturnValue();
-                if (state == 'SUCCESS') {
-                    resolve(value); 
-                }
-                if (state == 'ERROR') {
-                    console.log('ERROR', res.getError());
-                    reject( res.getError() );
-                }
-            });
-            
-            $A.enqueueAction(tourist);    
-        }));
+        
         return result;
     },
     
@@ -77,15 +53,40 @@
         return result;
     },
     
-    showToast : function(type, mes) {
+    showToast : function(type, msg) {
         let toastEvent = $A.get('e.force:showToast');
         
         toastEvent.setParams({
             title: type,
             type: type,
-            message: mes
+            message: msg
         });
         
         toastEvent.fire();
+    },
+    
+    createImagesList : function (cmp, selectedTripId) {
+        let numbers = ['first', 'second', 'third', 'fourth', 'fifth'];
+        
+        cmp.get('v.trips').forEach(function(record) {
+            if (record.value == selectedTripId) {
+                let finalList = [];
+                
+                cmp.set('v.mapMarkers', [ {
+                    location: {
+                        Latitude : record.Latitude,
+                        Longitude : record.Longitude
+                    }
+                }]);
+                
+                numbers.forEach(function(number) {
+                    const name = record.label.replace(/ /g,'');
+                    const profUrl = $A.get('$Resource.' + number + name);
+                    finalList.push(profUrl);
+                });
+                
+                cmp.set('v.tripNames', finalList);
+            }
+        });
     }
 })
