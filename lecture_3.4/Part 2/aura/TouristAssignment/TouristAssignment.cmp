@@ -1,18 +1,23 @@
 <aura:component controller='TouritstAssignmentController' implements='flexipage:availableForAllPageTypes' access='global' >
     
-    <aura:attribute name='tourist' type='Tourist__c'/>
-    <aura:attribute name='trips' type='List' default='[]'/>
-    <aura:attribute name='tripsList' type='List' default='[]'/>
-    <aura:attribute name='selectedTouristId' type='String'/>
-    <aura:attribute name='selectedTripId' type='String'/>
-    <aura:attribute name='tripNames' type='List'/>
-    <aura:attribute name='mapMarkers' type='Object'/>
+    <aura:attribute name='tourist' type='Tourist__c' access='public'/>
+    <aura:attribute name='trips' type='List' default='[]' access='public'/>
+    <aura:attribute name='selectedTouristId' type='String' access='public'/>
+    <aura:attribute name='selectedTripId' type='String' access='public'/>
+    <aura:attribute name='tripNames' type='List' access='public'/>
+    <aura:attribute name='mapMarkers' type='Object' access='public'/>
     
-    <aura:attribute name='isTouristSelected' type='Boolean' default='true'/>
-    <aura:attribute name='isTripSelected' type='Boolean' default='false'/> 
-    <aura:attribute name='showSpinner' type='Boolean' default='false'/>
+    <aura:attribute name='isTouristSelected' type='Boolean' default='true' access='public'/>
+    <aura:attribute name='isTripSelected' type='Boolean' default='false' access='public'/> 
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='public'/>
     
     <aura:handler name='onchange' event='l_lookup:OnChange' action='{!c.handleChange}'/>
+    
+    <force:recordData aura:id='recordLoader'
+                      recordId='{!v.selectedTouristId}'
+                      fields='Id, Name, LastName__c, Age__c'
+                      targetFields='{!v.tourist}' 
+                      recordUpdated='{!c.updateData}' />
     
     <aura:if isTrue='{!v.showSpinner}'>
         <div class='exampleHolder'>
@@ -21,41 +26,31 @@
     </aura:if>
     
     <lightning:card variant='Narrow' class='slds-p-around_medium'>
-        <fieldset class='slds-form-element slds-form-element_compound'>
-            <div class='slds-form-element__control'>
-                <div class='slds-form-element__row'>
-                    <div class='slds-size_1-of-2'>
-                        <div class='slds-form-element'>
-                            <div class='slds-form-element__control'>
-                                <l_lookup:Lookup aura:id='lookupTourist'
-                                                 objectType = 'Tourist__c'
-                                                 selectedRecordId = '{!v.selectedTouristId}'
-                                                 additionalField='LastName__c'
-                                                 label='Tourist'
-                                                 placeHolder = 'Please select a Tourist'
-                                                 orderBy='Name'/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='slds-size_1-of-2'>
-                        <div class='slds-form-element'>
-                            <div class='slds-form-element__control'>
-                                <lightning:combobox aura:id='combobox' 
-                                                    name='general'
-                                                    label='Trip'
-                                                    placeholder='Select trip'
-                                                    value ='{!v.selectedTripId}'
-                                                    options='{! v.trips }' 
-                                                    onchange='{! c.onChangeCombobox }'/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
+        <lightning:layout>
+            <lightning:layoutItem flexibility='auto' padding='around-small'>
+                <l_lookup:Lookup aura:id='lookupTourist'
+                                 objectType = 'Tourist__c'
+                                 selectedRecordId = '{!v.selectedTouristId}'
+                                 additionalField='LastName__c'
+                                 label='Tourist'
+                                 placeHolder = 'Please select a Tourist'
+                                 orderBy='Name'/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem flexibility='auto' padding='around-small'>
+                <lightning:combobox aura:id='combobox' 
+                                    name='general'
+                                    label='Trip'
+                                    placeholder='Select trip'
+                                    value ='{!v.selectedTripId}'
+                                    options='{! v.trips }' 
+                                    onchange='{! c.onChangeCombobox }'/>
+            </lightning:layoutItem>
+        </lightning:layout>
         
-        <div class='slds-p-top_small slds-align_absolute-center'>
+        <div class='slds-p-vertical_medium  slds-p-right_small'>
             <lightning:button aura:id='submitButton' 
+                              class='slds-float_right'
                               variant='destructive-text'
                               disabled='true'
                               label='Submit'
@@ -65,33 +60,21 @@
     </lightning:card>
     
     <lightning:card variant='Narrow' class='slds-p-around_medium'>
-        <fieldset class='slds-form-element slds-form-element_compound'>
-            <div class='slds-form-element__control'>
-                <div class='slds-form-element__row'>
-                    <div class='slds-size_1-of-2'>
-                        <div class='slds-form-element'>
-                            <div class='slds-form-element__control'>
-                                <label class='slds-form-element__label'>Trip information :</label>
-                                <c:TripRecordPage selectedTripId='{!v.selectedTripId}'
-                                                  isTripSelected='{!v.isTripSelected}'/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='slds-size_1-of-2'>
-                        <div class='slds-form-element'>
-                            <div class='slds-form-element__control'>
-                                <c:TripMap isTripSelected='{!v.isTripSelected}' 
-                                           zoomLevel='12' 
-                                           mapMarkers='{!v.mapMarkers}'/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
+        <lightning:layout>
+            <lightning:layoutItem flexibility='auto' padding='around-small'>
+                <label class='slds-form-element__label slds-text-title_bold slds-border_bottom'>{!format($Label.c.TripInformation)}</label>
+                <c:TripRecordPage selectedTripId='{!v.selectedTripId}'
+                                  isTripSelected='{!v.isTripSelected}'/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem flexibility='auto' padding='around-small'>
+                <c:TripMap isTripSelected='{!v.isTripSelected}' 
+                           zoomLevel='12' 
+                           mapMarkers='{!v.mapMarkers}'/>
+            </lightning:layoutItem>
+        </lightning:layout>
         
         <c:TripCarouselImages tripName='{!v.tripNames}'
                               isTripSelected='{!v.isTripSelected}'/>
-        
     </lightning:card>
 </aura:component>
