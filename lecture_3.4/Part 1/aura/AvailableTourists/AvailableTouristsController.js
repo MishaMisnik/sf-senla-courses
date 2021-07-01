@@ -76,7 +76,7 @@
             }
             
             cmp.set('v.showSpinner', false);
-        	$A.get('e.force:refreshView').fire();
+            $A.get('e.force:refreshView').fire();
         });
     }
 });
