@@ -1,6 +1,6 @@
 public class TripServise {
     
-    public static Boolean createFlights(List<Tourist__c> tourists, Trip__c trip) {
+    public static Boolean createFlightsOfferPending(List<Tourist__c> tourists, Trip__c trip) {
         if (tourists.isEmpty() ||  tourists == null) return false;
         
         Boolean isComplete = true;
@@ -23,5 +23,25 @@ public class TripServise {
         }
         
         return isComplete;
-    }    
+    }  
+    
+    public static Boolean createFlightRequested(String touristId, String tripId) {
+        if (String.isBlank(touristId)  ||  String.isBlank(tripId)) return false;
+        
+        Boolean isComplete = true;
+        Flight__c flight = new Flight__c(
+            Status__c = 'Requested',
+            Tourist__c = touristId,
+            Trip__c = tripId
+        );
+        
+        try {
+            insert flight;
+        } catch(DmlException e) {
+            isComplete = false;
+            System.debug('Error : ' + e.getMessage());
+        }
+        
+        return isComplete;
+    }
 }

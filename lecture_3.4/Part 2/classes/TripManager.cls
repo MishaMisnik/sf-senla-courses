@@ -32,4 +32,21 @@ public class TripManager {
             WHERE Id = :tripId
         ];
     }
+    
+    public static List<Trip__c> getByTouristParams(Tourist__c tourist) {
+        if (tourist == null) return new List<Trip__c>();
+        
+        return [
+            SELECT Id,
+                   Name,
+                   Start_Date__c,
+                   Minimal_Age__c,
+                   Departure_Space_Point__c,
+                   Departure_Space_Point__r.Id,
+                   Departure_Space_Point__r.Latitude__c,
+                   Departure_Space_Point__r.Longitude__c
+            FROM Trip__c
+            WHERE Start_Date__c >= :Date.today() AND Remaining_Seats__c > 0 AND Minimal_Age__c <= :tourist.Age__c
+        ];
+    }
 }

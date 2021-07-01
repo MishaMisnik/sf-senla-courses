@@ -9,8 +9,8 @@ public inherited sharing class AvailableTouristsController {
 
     @AuraEnabled
     public static Boolean createFlights(List<Tourist__c> tourists, Trip__c trip) {
-        if (tourists.isEmpty() ||  tourists == null) return false;
+		if (tourists.isEmpty() ||  tourists == null) return false;
         
-        return TripServise.createFlights(tourists, trip);
+        return TripServise.createFlightsOfferPending(tourists, trip);
     }
 }

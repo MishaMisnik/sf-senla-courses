@@ -61,7 +61,6 @@
     </lightning:card>
     
     <aura:if isTrue='{!v.showValidation}'>
-        <c:CreateFlightsValidation showSpinner='{!v.showSpinner}' 
-                                   showValidation='{!v.showValidation}'/>
+        <c:CreateFlightsValidation showSpinner='{!v.showSpinner}' showValidation='{!v.showValidation}'/>
     </aura:if>
 </aura:component>

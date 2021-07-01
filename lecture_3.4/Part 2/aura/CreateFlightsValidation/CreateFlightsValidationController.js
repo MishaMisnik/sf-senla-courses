@@ -1,5 +1,5 @@
 ({
-    inSubmit : function (cmp, event, helper) {
+	inSubmit : function (cmp, event, helper) {
         const validationEvent =  cmp.getEvent('createValidation');
         validationEvent.fire();
     },
