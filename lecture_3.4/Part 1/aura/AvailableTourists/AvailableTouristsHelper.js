@@ -76,7 +76,6 @@
             
             $A.enqueueAction(createNewFlights);
         }));
-        
         return result;
     }
 });
