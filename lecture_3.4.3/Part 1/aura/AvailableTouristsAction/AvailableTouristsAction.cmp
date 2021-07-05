@@ -1,0 +1,77 @@
+<aura:component controller='AvailableTouristsController' implements='flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader' access='global'>
+    
+    <aura:attribute name='columns' type='List' default='[]' access='public'/>
+    <aura:attribute name='tourists' type='List' default='[]' access='public'/>
+    <aura:attribute name='keyField' type='String' default='id' access='public'/>
+    <aura:attribute name='initialRows' type='Integer' default='10' access='public'/>
+    <aura:attribute name='selectedRowsCount' type='Integer' default='0' access='public'/>
+    <aura:attribute name='enableInfiniteLoading' type='Boolean' default='true' access='public'/>
+    <aura:attribute name='rowsToLoad' type='Integer' default='5' access='public'/>
+    <aura:attribute name='loadMoreOffset' type='Integer' default='0' access='public'/>
+    <aura:attribute name='totalNumberOfRows' type='Integer' default='300' access='public'/>
+    <aura:attribute name='loadMoreStatus' type='String' default='' access='public'/>
+    <aura:attribute name='selectedTourists' type='List' default='[]' access='public'/>
+    
+    <aura:attribute name='recordId' type='String' access='public'/>
+    <aura:attribute name='tripRecord' type='Trip__c' access='public'/>
+    <aura:attribute name='showValidation' type='Boolean' default='false' access='public'/>
+    <aura:attribute name='isActive' type='Boolean' default='true' access='public'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='public'/>
+    
+    <aura:handler name='createValidation' event='c:CreateFlights' action='{!c.inSubmit}'/>
+    
+    <force:recordData aura:id='recordLoader'
+                      recordId='{!v.recordId}'
+                      fields='Id, Name, Minimal_Age__c, Remaining_Seats__c, Start_Date__c'
+                      targetFields='{!v.tripRecord}'
+                      recordUpdated='{!c.dataLoader}' />
+    
+    <aura:if isTrue='{!v.showSpinner}'>
+        <div class='exampleHolder ' >
+            <lightning:spinner alternativeText='Loading' size='medium' />
+        </div>  
+    </aura:if>
+    {!v.selectedTourists}
+    <aura:if isTrue='{!v.isActive}'>
+        <aura:if isTrue='{!v.showValidation}'>
+            <c:CreateFlightsValidationAction showSpinner='{!v.showSpinner}' showValidation='{!v.showValidation}'/>
+            
+            <aura:set attribute='else'>
+                
+                <div class='slds-col modal-header slds-modal__header'>
+                    <h2 class='title slds-text-heading--medium'>{!format($Label.c.AddToTrip)}</h2>
+                </div>
+                
+                <div class='slds-col modal-body scrollable'>
+                    <lightning:datatable aura:id='touristsData'
+                                         class='datatableHeight'
+                                         columns='{! v.columns }'
+                                         data='{! v.tourists }'
+                                         keyField='{! v.keyField }'
+                                         showRowNumberColumn='true'
+                                         enableInfiniteLoading='{! v.enableInfiniteLoading }'
+                                         loadMoreOffset='{! v.loadMoreOffset }'
+                                         onloadmore='{! c.loadMoreTourists }' />
+                </div>
+                
+                <div class='slds-modal__footer'>
+                    <lightning:button aura:id='cancelButton' 
+                                      variant='neutral' 
+                                      label='Cancel' 
+                                      onclick='{! c.cancelOnClick }' />  
+                    
+                    <lightning:button aura:id='addButton' 
+                                      variant='brand' 
+                                      label='Add to Trip' 
+                                      onclick='{! c.addOnClick }' />  
+                </div>
+            </aura:set>
+        </aura:if>
+        
+        <aura:set attribute='else'>
+            <div class='slds-align_absolute-center'>
+                {!format($Label.c.TripComplete)}
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

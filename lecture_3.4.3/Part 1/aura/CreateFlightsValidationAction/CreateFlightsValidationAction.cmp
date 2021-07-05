@@ -1,0 +1,30 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global'>
+    <aura:attribute name='showValidation' type='Boolean' default='false' access='public'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='public'/>
+    
+    <aura:registerEvent name='createValidation' type='c:CreateFlights'/>
+    
+    <header class='slds-modal__header slds-text-heading_medium slds-hyphenate'>
+        {!format($Label.c.Validation)}
+    </header>
+    
+    <div class='slds-text-heading_medium '>
+        <div class='textHeight'>
+            <div class='slds-align_absolute-center'>
+                {!format($Label.c.TripValidation)}
+            </div>
+        </div>
+    </div>
+    
+    <footer class='slds-modal__footer'>
+        <lightning:button variant='neutral'
+                          label='Cancel'
+                          title='Cancel'
+                          onclick='{! c.onCancel }' />
+        
+        <lightning:button variant='brand'
+                          label='Yes'
+                          title='Yes'
+                          onclick='{!c.inSubmit}' />
+    </footer>
+</aura:component>

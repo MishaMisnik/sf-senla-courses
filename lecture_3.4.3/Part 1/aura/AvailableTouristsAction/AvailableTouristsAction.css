@@ -1,0 +1,14 @@
+.THIS .datatableHeight {
+    height: 325px;
+    width: 100%;
+}
+
+.THIS .modalSize {
+    height: 100%;
+    max-width: 40px;
+    min-width: 20px;
+}
+
+.THIS .cuf-content {
+    padding: 0px;
+}
