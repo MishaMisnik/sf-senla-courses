@@ -4,7 +4,7 @@
     <aura:attribute name='tourist' type='Tourist__c' default='[]' access='private'/>
     <aura:attribute name='email' type='String' access='private'/>
 
-	<force:recordData aura:id='recordLoader'
+    <force:recordData aura:id='recordLoader'
                       recordId='{!v.recordId}'
                       fields='Id, Name, LastName__c, Email__c'
                       targetFields='{!v.tourist}' 
