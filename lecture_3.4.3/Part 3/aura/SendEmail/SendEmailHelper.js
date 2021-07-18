@@ -1,6 +1,6 @@
 ({
 	sendEmail : function(cmp) {
-		let result = new Promise($A.getCallback( function (resolve, reject) {
+	    let result = new Promise($A.getCallback( function (resolve, reject) {
             const email = cmp.get('c.sendEmailWithLink');
             
             email.setParams({
