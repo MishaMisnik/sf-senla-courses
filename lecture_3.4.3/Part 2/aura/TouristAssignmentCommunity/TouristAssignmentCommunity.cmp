@@ -1,0 +1,78 @@
+<aura:component controller='TouritstAssignmentController' implements='forceCommunity:availableForAllPageTypes,force:hasRecordId,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,forceCommunity:layout' access='global'>       
+    <aura:attribute name='recordId' type='String' access='public'/>
+    <aura:attribute name='tourist' type='Tourist__c' access='private'/>
+    <aura:attribute name='trips' type='List' default='[]' access='public'/>
+    <aura:attribute name='selectedTripId' type='String' access='public'/>
+    <aura:attribute name='tripNames' type='List' access='public'/>
+    <aura:attribute name='mapMarkers' type='Object' access='public'/>
+    
+    <aura:attribute name='isTripSelected' type='Boolean' default='false' access='public'/>
+    <aura:attribute name='showSpinner' type='Boolean' default='false' access='private'/>
+    <aura:attribute name='isIdNull' type='Boolean' default='false' access='private'/>
+    
+    <aura:handler name='init' value='{!this}' action='{!c.init}'/>
+    
+    <force:recordData aura:id='recordLoader'
+                      recordId='{!v.recordId}'
+                      fields='Id, Name, LastName__c, Age__c'
+                      targetFields='{!v.tourist}' 
+                      recordUpdated='{!c.updateData}' />	
+    
+    <aura:if isTrue='{!v.isIdNull}'>
+        <div class='slds-box'>
+            <p><h1 class='slds-align_absolute-center'>{!format($Label.c.TouristIdIsNotFound)}</h1>
+            <h1 class='slds-align_absolute-center'>{!format($Label.c.ContactWithAdministrator)}</h1></p>
+        </div>  
+        <aura:set attribute='else'>
+            
+            <aura:if isTrue='{!v.showSpinner}'>
+                <div class='exampleHolder'>
+                    <lightning:spinner alternativeText='Loading' size='medium' />
+                </div>  
+            </aura:if>
+            
+            <lightning:card variant='Narrow' class='slds-p-around_medium'>
+                <lightning:layout>
+                    <lightning:layoutItem flexibility='auto' padding='around-small'>
+                        <lightning:combobox aura:id='combobox' 
+                                            name='general'
+                                            label='Trip'
+                                            placeholder='Select trip'
+                                            value ='{!v.selectedTripId}'
+                                            options='{! v.trips }' 
+                                            onchange='{! c.onChangeCombobox }'/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                
+                <div class='slds-p-vertical_medium  slds-p-right_small'>
+                    <lightning:button aura:id='submitButton' 
+                                      class='slds-float_right'
+                                      variant='destructive-text'
+                                      disabled='true'
+                                      label='Submit'
+                                      title='Brand action'
+                                      onclick='{! c.onClickButton }'/>
+                </div>
+            </lightning:card>
+            
+            <lightning:card variant='Narrow' class='slds-p-around_medium'>
+                <lightning:layout>
+                    <lightning:layoutItem flexibility='auto' padding='around-small'>
+                        <label class='slds-form-element__label slds-text-title_bold slds-border_bottom'>{!format($Label.c.TripInformation)}</label>
+                        <c:TripRecordPage selectedTripId='{!v.selectedTripId}'
+                                          isTripSelected='{!v.isTripSelected}'/>
+                    </lightning:layoutItem>
+                    
+                    <lightning:layoutItem flexibility='auto' padding='around-small'>
+                        <c:TripMap isTripSelected='{!v.isTripSelected}' 
+                                   zoomLevel='12' 
+                                   mapMarkers='{!v.mapMarkers}'/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                
+                <c:TripCarouselImages tripName='{!v.tripNames}'
+                                      isTripSelected='{!v.isTripSelected}'/>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+</aura:component>

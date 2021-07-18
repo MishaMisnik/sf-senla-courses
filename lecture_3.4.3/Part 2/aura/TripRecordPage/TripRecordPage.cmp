@@ -1,0 +1,43 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global' >
+    <aura:attribute name='selectedTripId' type='String' access='public'/>
+    <aura:attribute name='isTripSelected' type='Boolean' default='false' access='public'/>
+    
+    <aura:if isTrue='{!v.isTripSelected}'>
+        <lightning:recordViewForm aura:id='recordForm' 
+                                  recordId='{!v.selectedTripId}' 
+                                  objectApiName='Trip__c'>
+            
+            <lightning:layout>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='Name' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='Remaining_Seats__c' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+            <lightning:layout>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='Minimal_Age__c' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='Seats__c' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+            <lightning:layout>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='Start_Date__c' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+                <lightning:layoutItem class='itemSize' padding='around-small'>
+                    <lightning:outputField fieldName='End_Date__c' class='slds-border_bottom'/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:recordViewForm>
+        <aura:set attribute="else">
+            <div class="slds-align_absolute-center">
+                {!format($Label.c.TripComplete)}
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

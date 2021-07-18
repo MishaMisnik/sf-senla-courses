@@ -1,0 +1,15 @@
+<aura:component implements='flexipage:availableForAllPageTypes' access='global'>
+    
+    <aura:attribute name='tripName' type='List' access='public'/>
+    <aura:attribute name='isTripSelected' type='Boolean' default='false' access='public'/>
+    
+    <aura:if isTrue='{!v.isTripSelected}'>
+        <lightning:layout >
+            <aura:iteration items='{!v.tripName}' var='item' >
+                <lightning:layoutItem flexibility='auto' padding='around-small' class='sizeImages '>
+                    <lightning:carouselImage src='{!item}' />
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+    </aura:if>
+</aura:component>
